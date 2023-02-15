@@ -104,7 +104,13 @@ const Home: NextPage = () => {
   //     <div className="bg-white p-10 rounded-sm drop-shadow-sm"></div>
   //   </div>
   // );
-  return null;
+  return (
+    <div>
+      {[1, 2, 3, 4, 5, 6, 7].map((_, i) => (
+        <div className="flex flex-col space-y-5" key={i}></div>
+      ))}
+    </div>
+  );
 };
 
 export default Home;
