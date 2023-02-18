@@ -105,10 +105,19 @@ const Home: NextPage = () => {
   //   </div>
   // );
   return (
-    <div>
+    <div className="grid grid-cols-5 gap-2  items-stretch w-full p-4">
       {[1, 2, 3, 4, 5, 6, 7].map((_, i) => (
-        <div className="flex flex-col space-y-5" key={i}></div>
+        <div key={i} className="border border-gray-200 h-full">
+          <div
+            className="w-full h-0 bg-gray-200"
+            style={{ paddingTop: 'calc(100% - 2px)' }}
+          ></div>
+          <div className="p-3">
+            <p className="font-serif font-medium text-lg capitalize">title</p>
+          </div>
+        </div>
       ))}
+      <button></button>
     </div>
   );
 };
