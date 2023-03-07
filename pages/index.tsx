@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import Link from 'next/link';
 import * as FeatherIcon from 'react-feather';
 import { RiHeart2Line, RiHeart2Fill, RiAddLine } from 'react-icons/ri';
 
@@ -122,7 +123,13 @@ const Home: NextPage = () => {
           </div>
           <div className="p-3 h-32 flex flex-col justify-between">
             <div>
-              <p className="font-serif font-bold text-md capitalize">title</p>
+              <Link href={`/items/${[_]}`}>
+                <a>
+                  <p className="font-serif font-bold text-md capitalize">
+                    title {_}
+                  </p>
+                </a>
+              </Link>
               <p className="font-sans text-sm font-light text-gray-600">
                 Description
               </p>
