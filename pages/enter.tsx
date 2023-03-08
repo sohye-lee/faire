@@ -9,7 +9,7 @@ export default function Enter() {
   const onEmailClick = () => setMethod('email');
   const onPhoneClick = () => setMethod('phone');
   return (
-    <div className="w-full h-screen flex items-center justify-center">
+    <div className="max-w-md mx-auto py-16 flex flex-col space-y-5">
       <div>
         <h3 className="font-serif text-center text-3xl mb-5">Enter to Recy</h3>
         <div>
@@ -39,17 +39,18 @@ export default function Enter() {
             </div>
           </div>
           <form className="flex flex-col items-center space-y-3 py-5">
-            <label className="font-medium text-lg font-serif">
+            <label htmlFor="input" className="font-medium text-lg font-serif">
               {method === 'email' ? 'Email address' : null}
               {method === 'phone' ? 'Phone number' : null}
             </label>
             <div className="w-full">
               {method === 'email' ? (
                 <input
+                  id="input"
                   type="email"
                   placeholder="id@mail.com"
                   required
-                  className="w-full p-3"
+                  className="w-full p-3 focus:ring-2 focus:ring-purple-500"
                 />
               ) : null}
               {method === 'phone' ? (
@@ -58,10 +59,11 @@ export default function Enter() {
                     +1
                   </span>
                   <input
+                    id="input"
                     type="text"
                     placeholder="xxx-xxx-xxxx"
                     required
-                    className="w-full ml-0 p-3"
+                    className="w-full ml-0 p-3 focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
               ) : null}

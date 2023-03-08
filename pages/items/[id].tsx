@@ -31,7 +31,7 @@ const ItemDetail: NextPage = () => {
             motherfucker to get shot. You understand?
           </p>
           <div className="flex items-stretch space-x-2">
-            <button className="bg-black text-white text-sm flex items-center justify-center transition hover:bg-white border border-black hover:text-black w-full py-3 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-purple-300">
+            <button className="bg-black capitalize text-white text-sm flex items-center justify-center transition hover:bg-gray-800 border border-black w-full py-3 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-purple-500">
               Talk to seller
             </button>
             <button className="flex items-center justify-center border transition border-gray-900 text-gray-900 hover:bg-slate-300 p-3">
