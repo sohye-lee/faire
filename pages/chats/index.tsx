@@ -1,5 +1,4 @@
 import type { NextPage } from 'next';
-import { Divide } from 'react-feather';
 
 const Chats: NextPage = () => {
   return (
