@@ -12,7 +12,7 @@ const Live: NextPage = () => {
               <div className="bg-slate-300 w-full aspect-video"></div>
               <div>
                 <div>
-                  <Link href={`/items/${[_]}`}>
+                  <Link href={`/live/${[_]}`}>
                     <a>
                       <p className="font-serif font-bold text-md capitalize">
                         title {_}
@@ -29,9 +29,11 @@ const Live: NextPage = () => {
           </div>
         ))}
       </div>
-      <button className="fixed bottom-10 right-10 bg-black w-12 h-12 flex text-xl items-center justify-center rounded-full">
-        <RiVideoAddLine width="40" height="40" color="white" />
-      </button>
+      <Link href="/live/create">
+        <button className="fixed bottom-10 right-10 bg-black w-12 h-12 flex text-xl items-center justify-center rounded-full">
+          <RiVideoAddLine width="40" height="40" color="white" />
+        </button>
+      </Link>
     </div>
   );
 };
