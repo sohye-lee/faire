@@ -12,8 +12,8 @@ import Layout from '../components/layout';
 
 const Home: NextPage = () => {
   return (
-    <Layout>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2  items-stretch w-full px-4">
+    <Layout hasTabBar={true} title="Home">
+      <div className="grid grid-cols-2 gap-2  items-stretch w-full px-4">
         {[1, 2, 3, 4, 5, 6, 7].map((_, i) => (
           <div key={i} className="border border-gray-200 h-full">
             <div className="w-full aspect-square bg-gray-100 relative">
@@ -56,9 +56,11 @@ const Home: NextPage = () => {
             </div>
           </div>
         ))}
-        <button className="fixed bottom-10 right-10 bg-black w-10 h-10 z-30 flex items-center justify-center rounded-full">
-          <RiAddLine width={60} height={60} color="white" />
-        </button>
+        <Link href="/items/upload">
+          <button className="fixed bottom-16 right-4 bg-black w-10 h-10 z-30 flex items-center justify-center rounded-full">
+            <RiAddLine width={60} height={60} color="white" />
+          </button>
+        </Link>
       </div>
     </Layout>
   );

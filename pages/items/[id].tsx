@@ -1,10 +1,20 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Layout from '../../components/layout';
+import Button from '../../components/button';
 
+interface ItemProps {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  price: number;
+  comments: number;
+  hearts: number;
+}
 const ItemDetail: NextPage = () => {
   return (
-    <Layout>
+    <Layout hasTabBar={false} canGoBack={true}>
       <div className="px-4">
         <div>
           <div className="h-96 bg-slate-300" />
@@ -33,12 +43,10 @@ const ItemDetail: NextPage = () => {
               the first motherfucker to get shot. You understand?
             </p>
             <div className="flex items-stretch space-x-2">
-              <button className="bg-black capitalize text-white text-sm flex items-center justify-center transition hover:bg-gray-800 border border-black w-full py-3 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-purple-500">
-                Talk to seller
-              </button>
-              <button className="flex items-center justify-center border transition border-gray-900 text-gray-900 hover:bg-slate-300 p-3">
+              <Button large={true} filled={true} text="Talk To Seller" />
+              <Button large={false} flled={false} addClass="h-full p-3" text="">
                 <svg
-                  className="h-6 w-6 "
+                  className="h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -52,7 +60,7 @@ const ItemDetail: NextPage = () => {
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
