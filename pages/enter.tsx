@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../components/button';
+import Input from '../components/input';
 import Layout from '../components/layout';
 import { mergeClass } from './libs/utils';
 
@@ -45,35 +46,24 @@ export default function Enter() {
               </div>
             </div>
             <form className="flex flex-col items-center space-y-3 py-5">
-              <label htmlFor="input" className="font-medium text-lg font-serif">
-                {method === 'email' ? 'Email address' : null}
-                {method === 'phone' ? 'Phone number' : null}
-              </label>
-              <div className="w-full">
-                {method === 'email' ? (
-                  <input
-                    id="input"
-                    type="email"
-                    placeholder="id@mail.com"
-                    required
-                    className="w-full p-3 focus:ring-2 focus:ring-purple-500"
-                  />
-                ) : null}
-                {method === 'phone' ? (
-                  <div className="flex items-stretch">
-                    <span className="p-3 text-center border border-gray-300 border-r-0">
-                      +1
-                    </span>
-                    <input
-                      id="input"
-                      type="text"
-                      placeholder="xxx-xxx-xxxx"
-                      required
-                      className="w-full ml-0 p-3 focus:ring-2 focus:ring-purple-500"
-                    />
-                  </div>
-                ) : null}
-              </div>
+              {method === 'email' ? (
+                <Input
+                  required={true}
+                  label=""
+                  name="email"
+                  type="email"
+                  placeholder="youraddress@mail.com"
+                />
+              ) : (
+                <Input
+                  required={true}
+                  label=""
+                  name="phone"
+                  type="phone"
+                  placeholder="type numbers only"
+                />
+              )}
+
               <Button large={true} filled={true} text="">
                 {method === 'email' ? 'Get login link' : null}
                 {method === 'phone' ? 'Get one-time password' : null}

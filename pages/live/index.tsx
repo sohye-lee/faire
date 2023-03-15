@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { RiAddLine, RiVideoAddLine } from 'react-icons/ri';
+import FloatButton from '../../components/floatButton';
 import Layout from '../../components/layout';
 
 const Live: NextPage = () => {
@@ -31,11 +32,9 @@ const Live: NextPage = () => {
             </div>
           ))}
         </div>
-        <Link href="/live/create">
-          <button className=" z-50 fixed bottom-10 right-10 bg-black w-12 h-12 flex text-xl items-center justify-center rounded-full">
-            <RiVideoAddLine width="40" height="40" color="white" />
-          </button>
-        </Link>
+        <FloatButton href="/live/create">
+          <RiVideoAddLine width="40" height="40" color="white" />
+        </FloatButton>
       </div>
     </Layout>
   );

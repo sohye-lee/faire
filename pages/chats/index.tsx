@@ -1,6 +1,8 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
+import FloatButton from '../../components/floatButton';
 import Layout from '../../components/layout';
+import { RiAddLine } from 'react-icons/ri';
 
 const Chats: NextPage = () => {
   return (
@@ -21,6 +23,9 @@ const Chats: NextPage = () => {
             </div>
           </Link>
         ))}
+        <FloatButton href="/chats/create">
+          <RiAddLine />
+        </FloatButton>
       </div>
     </Layout>
   );

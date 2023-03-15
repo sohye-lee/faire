@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import Button from '../../components/button';
+import Input from '../../components/input';
 import Layout from '../../components/layout';
 
 const Upload: NextPage = () => {
@@ -26,55 +27,15 @@ const Upload: NextPage = () => {
             <input className="hidden" type="file" />
           </label>
         </div>
-        <div>
-          <label
-            htmlFor="price"
-            className="text-lg mb-2 font-serif font-medium"
-          >
-            Name
-          </label>
-          <div className="flex items-center relative">
-            <input
-              id="price"
-              type="text"
-              placeholder="0.00"
-              className="w-full px-3 focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-        </div>
-        <div>
-          <label
-            htmlFor="price"
-            className="text-lg mb-2 font-serif font-medium"
-          >
-            Price
-          </label>
-          <div className="flex items-center relative">
-            <div className="absolute left-2 top-1/2 -translate-y-1/2">
-              <span className="text-lg font-serif font-medium">$</span>
-            </div>
-            <input
-              id="price"
-              type="text"
-              placeholder="0.00"
-              className="w-full px-6 focus:ring-2 focus:ring-purple-500"
-            />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2">
-              <span className="text-lg font-serif font-medium">USD</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <label className="text-lg mb-2 font-serif font-medium">
-            Description
-          </label>
-          <div>
-            <textarea
-              rows={4}
-              className="w-full focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-        </div>
+        <Input
+          label="Name"
+          name="name"
+          placeholder="name of the product"
+          type="text"
+        />
+        <Input type="price" label="Price" name="price" placeholder="0.00" />
+        <Input type="textarea" label="Description" name="description" />
+
         <Button text="Upload Product" filled={true} large={true} />
       </div>
     </Layout>

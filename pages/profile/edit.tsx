@@ -1,4 +1,6 @@
 import type { NextPage } from 'next';
+import Button from '../../components/button';
+import Input from '../../components/input';
 import Layout from '../../components/layout';
 
 const EditProfile: NextPage = () => {
@@ -26,45 +28,15 @@ const EditProfile: NextPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <label
-                    htmlFor="email"
-                    className="font-medium text-lg font-serif"
-                  >
-                    email address
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="id@mail.com"
-                    required
-                    className="w-full p-3 focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label
-                    htmlFor="phone"
-                    className="font-medium text-lg font-serif"
-                  >
-                    phone
-                  </label>
-                  <div className="flex items-stretch">
-                    <span className="p-3 text-center border border-gray-500 bg-slate-100 border-r-0">
-                      +1
-                    </span>
-                    <input
-                      id="phone"
-                      type="text"
-                      placeholder="xxx-xxx-xxxx"
-                      required
-                      className="w-full ml-0 p-3 focus:ring-2 focus:ring-purple-500"
-                    />
-                  </div>
-                </div>
+                <Input
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  placeholder="id@mail.com"
+                />
+                <Input label="Phone" name="phone" type="phone" placeholder="" />
               </div>
-              <button className="w-full bg-black py-3 hover:bg-purple-500 transition-all text-white capitalize">
-                Save
-              </button>
+              <Button text="Save" large={true} filled={true} />
             </form>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import Button from '../../components/button';
+import Input from '../../components/input';
 import Layout from '../../components/layout';
 
 const CommunitPostDetail: NextPage = () => {
@@ -78,12 +79,8 @@ const CommunitPostDetail: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className="px-4">
-          <textarea
-            rows={4}
-            className="w-full focus:ring-2 focus:ring-purple-500 placeholder:text-gray-400 focus:ring-offset-2"
-            placeholder="Leave your answer"
-          />
+        <div className="px-4 space-y-3">
+          <Input type="textarea" placeholder="" label="" name="" />
           <Button addClass="" large={true} filled={true} text="Reply" />
         </div>
       </div>

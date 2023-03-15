@@ -6,15 +6,17 @@ const Profile: NextPage = () => {
   return (
     <Layout title={'Profile'} hasTabBar={true} canGoBack={false}>
       <div className="flex flex-col space-y-4 px-4">
-        <div className="flex px-4 items-center space-x-3 pt-3 mb-4 border-b cursor-pointer">
+        <div className="flex px-4 items-center space-x-3 pt-3 pb-4 border-b cursor-pointer">
           <div className="h-10 w-10 rounded-full bg-slate-200" />
           <div>
             <p className="font-medium font-serif text-sm text-gray-700">
               Steve Jobs
             </p>
-            <p className="text-xs font-medium font-sans text-gray-700">
-              Edit profile &rarr;
-            </p>
+            <Link href="/profile/edit">
+              <p className="text-xs font-medium font-sans text-gray-700">
+                Edit profile &rarr;
+              </p>
+            </Link>
           </div>
         </div>
         <div className="flex justify-between px-4">

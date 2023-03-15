@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Link from 'next/link';
 import { RiAddLine, RiVideoAddLine } from 'react-icons/ri';
 import Button from '../../components/button';
+import Input from '../../components/input';
 import Layout from '../../components/layout';
 
 const LiveDetail: NextPage = () => {
@@ -137,10 +138,7 @@ const LiveDetail: NextPage = () => {
           </div>
           <div className="absolute bottom-0 left-0 w-full">
             <div className="flex w-full items-center relative">
-              <input
-                type="text"
-                className="w-full mb-[1px] mx-[1px] focus:ring-1 -focus:ring-offset-1 focus:ring-purple-600 outline-none"
-              />
+              <Input type="text" label="" name="" />
               <Button
                 large={false}
                 filled={true}
