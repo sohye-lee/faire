@@ -1,13 +1,39 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Button from '../components/button';
 import Input from '../components/input';
 import Layout from '../components/layout';
 import { mergeClass } from './libs/utils';
 
+interface EnterForm {
+  email?: string;
+  phone?: string;
+}
+
 export default function Enter() {
+  const { register, watch, handleSubmit, reset } = useForm<EnterForm>();
   const [method, setMethod] = useState<'email' | 'phone'>('email');
-  const onEmailClick = () => setMethod('email');
-  const onPhoneClick = () => setMethod('phone');
+  const [submitting, setSubmitting] = useState(false);
+  const onEmailClick = () => {
+    reset();
+    setMethod('email');
+  };
+  const onPhoneClick = () => {
+    reset();
+    setMethod('phone');
+  };
+  const onValid = (data: EnterForm) => {
+    console.log(data);
+    setSubmitting(true);
+    fetch('/api/users/enter', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then(() => setSubmitting(false));
+  };
+  // console.log(watch());
   return (
     <Layout title={'Welcome Back'} hasTabBar={false} canGoBack={true}>
       <div className="flex flex-col space-y-5 px-4">
@@ -48,6 +74,7 @@ export default function Enter() {
             <form className="flex flex-col items-center space-y-3 py-5">
               {method === 'email' ? (
                 <Input
+                  register={register('email')}
                   required={true}
                   label=""
                   name="email"
@@ -56,6 +83,7 @@ export default function Enter() {
                 />
               ) : (
                 <Input
+                  register={register('phone')}
                   required={true}
                   label=""
                   name="phone"
@@ -64,8 +92,17 @@ export default function Enter() {
                 />
               )}
 
-              <Button large={true} filled={true} text="">
-                {method === 'email' ? 'Get login link' : null}
+              <Button
+                large={true}
+                filled={true}
+                text=""
+                onClick={handleSubmit(onValid)}
+              >
+                {method === 'email'
+                  ? submitting
+                    ? 'Loading'
+                    : 'Get login link'
+                  : null}
                 {method === 'phone' ? 'Get one-time password' : null}
               </Button>
             </form>

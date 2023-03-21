@@ -13,6 +13,7 @@ export default function Input({
   type = 'text',
   placeholder,
   required = false,
+  register,
   ...rest
 }: InputProps) {
   return (
@@ -23,6 +24,8 @@ export default function Input({
       <div className="flex items-center relative w-full">
         {type == 'text' || type == 'email' ? (
           <input
+            {...rest}
+            {...register}
             id={name}
             type={type}
             placeholder={placeholder}
@@ -38,8 +41,11 @@ export default function Input({
             <input
               id={name}
               type="number"
+              step="0.01"
               placeholder={placeholder}
               className="w-full px-6 focus:ring-2 text-sm font-serif focus:ring-purple-500 py-3 border border-black"
+              {...register}
+              {...rest}
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               <span className="text-lg font-serif font-medium">USD</span>
@@ -52,6 +58,8 @@ export default function Input({
             placeholder={placeholder}
             className="w-full px-3 focus:ring-2 text-sm font-serif focus:ring-purple-500 py-3 border border-black"
             rows={5}
+            {...rest}
+            {...register}
           ></textarea>
         ) : null}
         {type == 'phone' ? (
@@ -60,6 +68,8 @@ export default function Input({
               +1
             </span>
             <input
+              {...rest}
+              {...register}
               id={name}
               type="text"
               placeholder="123-456-7890"

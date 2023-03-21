@@ -1,12 +1,37 @@
+import { Decimal } from '@prisma/client/runtime';
 import type { NextPage } from 'next';
+import { FieldErrors, useForm } from 'react-hook-form';
 import Button from '../../components/button';
 import Input from '../../components/input';
 import Layout from '../../components/layout';
 
+interface ItemForm {
+  name: string;
+  price: Decimal;
+  description?: string;
+  imgUrl?: string;
+}
 const Upload: NextPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ItemForm>();
+  const onValid = (data: ItemForm) => {
+    console.log(data);
+  };
+
+  const onInvalid = (errors: FieldErrors) => {
+    console.log(errors);
+  };
+
+  console.log(errors);
   return (
     <Layout title={'Upload Your Item'} hasTabBar={false} canGoBack={true}>
-      <div className="flex flex-col space-y-3 px-4">
+      <form
+        onSubmit={handleSubmit(onValid, onInvalid)}
+        className="flex flex-col space-y-3 px-4"
+      >
         <div>
           <label className="flex hover:text-purple-600 transition hover:border-purple-300 hover:bg-slate-100 justify-center items-center h-48 w-full  border border-black border-dashed">
             <svg
@@ -24,20 +49,40 @@ const Upload: NextPage = () => {
               />
             </svg>
 
-            <input className="hidden" type="file" />
+            <input {...register('imgUrl')} className="hidden" type="file" />
           </label>
         </div>
         <Input
+          {...register('name', {
+            required: 'Item name is required.',
+            minLength: {
+              value: 8,
+              message: 'Item name should be longer than 7 chars.',
+            },
+          })}
           label="Name"
           name="name"
           placeholder="name of the product"
           type="text"
         />
-        <Input type="price" label="Price" name="price" placeholder="0.00" />
-        <Input type="textarea" label="Description" name="description" />
+        <Input
+          id="price"
+          {...register('price', { required: 'Price is required.', min: 3 })}
+          type="price"
+          label="Price"
+          name="price"
+          placeholder="0.00"
+        />
+        <Input
+          id="description"
+          {...register('description')}
+          type="textarea"
+          label="Description"
+          name="description"
+        />
 
         <Button text="Upload Product" filled={true} large={true} />
-      </div>
+      </form>
     </Layout>
   );
 };
