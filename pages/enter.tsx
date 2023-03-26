@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import Button from '../components/button';
 import Input from '../components/input';
 import Layout from '../components/layout';
-import { mergeClass } from './libs/utils';
+import useMutation from './libs/client/useMutation';
+import { mergeClass } from './libs/client/utils';
 
 interface EnterForm {
   email?: string;
@@ -11,6 +12,7 @@ interface EnterForm {
 }
 
 export default function Enter() {
+  const [enter, { loading, data, error }] = useMutation('/api/users/enter');
   const { register, watch, handleSubmit, reset } = useForm<EnterForm>();
   const [method, setMethod] = useState<'email' | 'phone'>('email');
   const [submitting, setSubmitting] = useState(false);
@@ -22,18 +24,11 @@ export default function Enter() {
     reset();
     setMethod('phone');
   };
-  const onValid = (data: EnterForm) => {
-    console.log(data);
-    setSubmitting(true);
-    fetch('/api/users/enter', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(() => setSubmitting(false));
+  const onValid = (validForm: EnterForm) => {
+    if (loading) return;
+    enter(validForm);
   };
-  // console.log(watch());
+
   return (
     <Layout title={'Welcome Back'} hasTabBar={false} canGoBack={true}>
       <div className="flex flex-col space-y-5 px-4">

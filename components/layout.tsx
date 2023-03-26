@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { mergeClass } from '../pages/libs/utils';
+import { mergeClass } from '../pages/libs/client/utils';
 import {
   RiHome3Line,
   RiNewspaperLine,
