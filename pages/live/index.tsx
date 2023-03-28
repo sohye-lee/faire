@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { RiAddLine, RiVideoAddLine } from 'react-icons/ri';
-import FloatButton from '../../components/floatButton';
-import Layout from '../../components/layout';
+import FloatButton from '@components/floatButton';
+import Layout from '@components/layout';
 
 const Live: NextPage = () => {
   return (

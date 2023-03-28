@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import FloatButton from '../../components/floatButton';
-import Layout from '../../components/layout';
+import FloatButton from '@components/floatButton';
+import Layout from '@components/layout';
 import { RiAddLine } from 'react-icons/ri';
 
 const Chats: NextPage = () => {

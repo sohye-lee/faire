@@ -1,9 +1,9 @@
 import { Decimal } from '@prisma/client/runtime';
 import type { NextPage } from 'next';
 import { FieldErrors, useForm } from 'react-hook-form';
-import Button from '../../components/button';
-import Input from '../../components/input';
-import Layout from '../../components/layout';
+import Button from '@components/button';
+import Input from '@components/input';
+import Layout from '@components/layout';
 
 interface ItemForm {
   name: string;

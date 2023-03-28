@@ -1,7 +1,7 @@
 import React from 'react';
 import type { NextPage } from 'next';
-import Layout from '../../components/layout';
-import Button from '../../components/button';
+import Layout from '@components/layout';
+import Button from '@components/button';
 
 interface ItemProps {
   id: number;

@@ -8,9 +8,9 @@ import {
   RiChat2Line,
   RiChat3Line,
 } from 'react-icons/ri';
-import FloatButton from '../components/floatButton';
-import Item from '../components/item';
-import Layout from '../components/layout';
+import FloatButton from '@components/floatButton';
+import Item from '@components/item';
+import Layout from '@components/layout';
 
 const Home: NextPage = () => {
   return (

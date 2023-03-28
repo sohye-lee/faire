@@ -73,7 +73,7 @@ export default function Input({
               id={name}
               type="text"
               placeholder="123-456-7890"
-              required
+              required={required}
               className="w-full ml-0 p-3 focus:ring-2 text-sm font-serif focus:ring-purple-500 border border-black"
             />
           </div>

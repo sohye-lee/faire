@@ -1,4 +1,4 @@
-import { mergeClass } from '../pages/libs/client/utils';
+import { mergeClass } from '../libs/client/utils';
 
 interface ButtonProps {
   large?: boolean;

@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { RiAddLine, RiVideoAddLine } from 'react-icons/ri';
-import Button from '../../components/button';
-import Input from '../../components/input';
-import Layout from '../../components/layout';
+import Button from '@components/button';
+import Input from '@components/input';
+import Layout from '@components/layout';
 
 const LiveDetail: NextPage = () => {
   return (
