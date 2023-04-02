@@ -11,9 +11,27 @@ interface EnterForm {
   phone?: string;
 }
 
+interface TokenForm {
+  token: string;
+}
+
+interface MutationResult {
+  ok: boolean;
+}
+
 export default function Enter() {
-  const [enter, { loading, data, error }] = useMutation('/api/users/enter');
+  const [enter, { loading, data, error }] =
+    useMutation<MutationResult>('/api/users/enter');
+  const [
+    confirmToken,
+    { loading: tokenLoading, data: tokenData, error: tokenError },
+  ] = useMutation<MutationResult>('/api/users/confirm');
   const { register, watch, handleSubmit, reset } = useForm<EnterForm>();
+  const {
+    register: tokenRegister,
+    handleSubmit: tokenHandleSubmit,
+    reset: tokenReset,
+  } = useForm<TokenForm>();
   const [method, setMethod] = useState<'email' | 'phone'>('email');
   const [submitting, setSubmitting] = useState(false);
   const onEmailClick = () => {
@@ -28,6 +46,12 @@ export default function Enter() {
     if (loading) return;
     enter(validForm);
   };
+  const onTokenValid = (validForm: TokenForm) => {
+    if (tokenLoading) return;
+    confirmToken(validForm);
+  };
+  console.log(tokenData);
+  console.log(data);
 
   return (
     <Layout title={'Welcome Back'} hasTabBar={false} canGoBack={true}>
@@ -37,70 +61,93 @@ export default function Enter() {
             Enter to Recy
           </h3>
           <div>
-            <div className="w-full">
-              <h5 className="text-center text-sm font-sans mb-2 text-gray-500">
-                Enter using:
-              </h5>
-              <div className="grid grid-cols-2  w-full border-b">
-                <button
-                  className={mergeClass(
-                    'pb-4 border-b-2 font-medium w-full ',
-                    method === 'email'
-                      ? 'text-purple-500 border-purple-500'
-                      : ''
-                  )}
-                  onClick={onEmailClick}
-                >
-                  Email
-                </button>
-                <button
-                  className={mergeClass(
-                    'pb-4 border-b-2 font-medium w-full',
-                    method === 'phone'
-                      ? 'text-purple-500 border-purple-500'
-                      : ''
-                  )}
-                  onClick={onPhoneClick}
-                >
-                  Phone
-                </button>
-              </div>
-            </div>
-            <form className="flex flex-col items-center space-y-3 py-5">
-              {method === 'email' ? (
+            {data?.ok ? (
+              <form className="flex flex-col items-center space-y-3 py-5">
                 <Input
-                  register={register('email')}
-                  required={false}
-                  label=""
-                  name="email"
-                  type="email"
-                  placeholder="youraddress@mail.com"
-                />
-              ) : (
-                <Input
-                  register={register('phone')}
+                  register={tokenRegister('token', { required: true })}
                   required={true}
                   label=""
-                  name="phone"
-                  type="phone"
-                  placeholder="type numbers only"
+                  name="token"
+                  type="number"
+                  placeholder="Confirmation Token"
                 />
-              )}
+                <Button
+                  large={true}
+                  filled={true}
+                  text=""
+                  onClick={tokenHandleSubmit(onTokenValid)}
+                >
+                  {loading ? 'Loading' : 'Confirm Token'}
+                </Button>
+              </form>
+            ) : (
+              <>
+                <div className="w-full">
+                  <h5 className="text-center text-sm font-sans mb-2 text-gray-500">
+                    Enter using:
+                  </h5>
+                  <div className="grid grid-cols-2  w-full border-b">
+                    <button
+                      className={mergeClass(
+                        'pb-4 border-b-2 font-medium w-full ',
+                        method === 'email'
+                          ? 'text-purple-500 border-purple-500'
+                          : ''
+                      )}
+                      onClick={onEmailClick}
+                    >
+                      Email
+                    </button>
+                    <button
+                      className={mergeClass(
+                        'pb-4 border-b-2 font-medium w-full',
+                        method === 'phone'
+                          ? 'text-purple-500 border-purple-500'
+                          : ''
+                      )}
+                      onClick={onPhoneClick}
+                    >
+                      Phone
+                    </button>
+                  </div>
+                </div>
+                <form className="flex flex-col items-center space-y-3 py-5">
+                  {method === 'email' ? (
+                    <Input
+                      register={register('email')}
+                      required={false}
+                      label=""
+                      name="email"
+                      type="email"
+                      placeholder="youraddress@mail.com"
+                    />
+                  ) : (
+                    <Input
+                      register={register('phone')}
+                      required={true}
+                      label=""
+                      name="phone"
+                      type="phone"
+                      placeholder="type numbers only"
+                    />
+                  )}
 
-              <Button
-                large={true}
-                filled={true}
-                text=""
-                onClick={handleSubmit(onValid)}
-              >
-                {method === 'email'
-                  ? submitting
-                    ? 'Loading'
-                    : 'Get login link'
-                  : null}
-                {method === 'phone' ? 'Get one-time password' : null}
-              </Button>
-            </form>
+                  <Button
+                    large={true}
+                    filled={true}
+                    text=""
+                    onClick={handleSubmit(onValid)}
+                  >
+                    {method === 'email'
+                      ? submitting
+                        ? 'Loading'
+                        : 'Get login link'
+                      : null}
+                    {method === 'phone' ? 'Get one-time password' : null}
+                  </Button>
+                </form>
+              </>
+            )}
             <div>
               <div className="flex flex-col items-center w-full relative">
                 <div className="absolute border-t border-gray-300 w-full mt-3"></div>

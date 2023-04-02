@@ -1,7 +1,7 @@
 interface InputProps {
   label: string;
   name: string;
-  type?: 'text' | 'email' | 'phone' | 'price' | 'textarea';
+  type?: 'text' | 'email' | 'phone' | 'price' | 'number' | 'textarea';
   placeholder?: string;
   required?: boolean;
   [key: string]: any;
@@ -33,6 +33,17 @@ export default function Input({
             required={required}
           />
         ) : null}
+        {type == 'number' ? (
+          <input
+            {...rest}
+            {...register}
+            id={name}
+            type={type}
+            placeholder={placeholder}
+            className="w-full px-3 focus:ring-2 text-sm font-serif focus:ring-purple-500 py-3 border border-black"
+            required={required}
+          />
+        ) : null}
         {type == 'price' ? (
           <div className="flex items-center relative w-full">
             <div className="absolute left-2 top-1/2 -translate-y-1/2">
@@ -52,6 +63,7 @@ export default function Input({
             </div>
           </div>
         ) : null}
+
         {type == 'textarea' ? (
           <textarea
             id={name}
