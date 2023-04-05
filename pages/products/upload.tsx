@@ -5,9 +5,9 @@ import Button from '@components/button';
 import Input from '@components/input';
 import Layout from '@components/layout';
 
-interface ItemForm {
+interface ProductForm {
   name: string;
-  price: Decimal;
+  price: number;
   description?: string;
   imgUrl?: string;
 }
@@ -15,21 +15,22 @@ const Upload: NextPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<ItemForm>();
-  const onValid = (data: ItemForm) => {
+    // formState: { errors },
+  } = useForm<ProductForm>();
+
+  const onValid = (data: ProductForm) => {
     console.log(data);
   };
 
-  const onInvalid = (errors: FieldErrors) => {
-    console.log(errors);
-  };
+  // const onInvalid = (errors: FieldErrors) => {
+  //   console.log(errors);
+  // };
 
-  console.log(errors);
+  // console.log(errors);
   return (
-    <Layout title={'Upload Your Item'} hasTabBar={false} canGoBack={true}>
+    <Layout title={'Upload Your Product'} canGoBack>
       <form
-        onSubmit={handleSubmit(onValid, onInvalid)}
+        onSubmit={handleSubmit(onValid)}
         className="flex flex-col space-y-3 px-4"
       >
         <div>
@@ -64,6 +65,7 @@ const Upload: NextPage = () => {
           name="name"
           placeholder="name of the product"
           type="text"
+          required
         />
         <Input
           id="price"
@@ -72,6 +74,7 @@ const Upload: NextPage = () => {
           label="Price"
           name="price"
           placeholder="0.00"
+          required
         />
         <Input
           id="description"
@@ -79,6 +82,7 @@ const Upload: NextPage = () => {
           type="textarea"
           label="Description"
           name="description"
+          placeholder="details of the product"
         />
 
         <Button text="Upload Product" filled={true} large={true} />

@@ -2,6 +2,7 @@ import client from '@libs/server/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import withHandler, { ResponseType } from '@libs/server/withHandler';
 import { withApiSession } from '@libs/server/withSession';
+import { useRouter } from 'next/router';
 
 async function handler(
   req: NextApiRequest,
@@ -26,9 +27,9 @@ async function handler(
     },
   });
 
-  res.status(200).json({ ok: true, token });
+  res.status(200).json({ ok: true });
 }
 
 export default withApiSession(
-  withHandler({ method: 'POST', handler, isPrivate: true })
+  withHandler({ method: 'POST', handler, isPrivate: false })
 );

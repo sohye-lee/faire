@@ -50,7 +50,6 @@ export default function Enter() {
   const onTokenValid = (validForm: TokenForm) => {
     if (tokenLoading) return;
     confirmToken(validForm);
-    console.log(tokenData);
   };
 
   const router = useRouter();
@@ -76,7 +75,7 @@ export default function Enter() {
                   required={true}
                   label=""
                   name="token"
-                  type="number"
+                  type="text"
                   placeholder="Confirmation Token"
                 />
                 <Button

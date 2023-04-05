@@ -11,8 +11,11 @@ import {
 import FloatButton from '@components/floatButton';
 import Item from '@components/item';
 import Layout from '@components/layout';
+import useUser from '@libs/client/useUser';
 
 const Home: NextPage = () => {
+  const { user } = useUser();
+  console.log(user);
   return (
     <Layout hasTabBar={true} title="Home">
       <div className="grid grid-cols-2 gap-2  items-stretch w-full px-4">
@@ -27,7 +30,7 @@ const Home: NextPage = () => {
             price={99.0}
           />
         ))}
-        <FloatButton href="/items/upload">
+        <FloatButton href="/products/upload">
           <RiAddLine color="white" />
         </FloatButton>
       </div>
