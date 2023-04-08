@@ -3,7 +3,7 @@ import { RiHeart3Line, RiChat3Line } from 'react-icons/ri';
 
 interface ItemProps {
   id: number;
-  title: string;
+  name: string;
   price: number;
   description: string;
   comments: number;
@@ -11,7 +11,7 @@ interface ItemProps {
 }
 
 export default function Item({
-  title,
+  name,
   price = 0,
   comments = 0,
   liked = 0,
@@ -34,10 +34,10 @@ export default function Item({
       </div>
       <div className="p-3 h-32 flex flex-col justify-between">
         <div>
-          <Link href={`/items/${[id]}`}>
+          <Link href={`/products/${[id]}`}>
             <a>
               <p className="font-serif font-bold text-md capitalize truncate">
-                {title} {id}
+                {name}
               </p>
             </a>
           </Link>

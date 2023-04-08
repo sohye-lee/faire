@@ -44,7 +44,12 @@ const ItemDetail: NextPage = () => {
             </p>
             <div className="flex items-stretch space-x-2">
               <Button large={true} filled={true} text="Talk To Seller" />
-              <Button large={false} flled={false} addClass="h-full p-3" text="">
+              <Button
+                large={false}
+                filled={false}
+                addClass="h-full p-3"
+                text=""
+              >
                 <svg
                   className="h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"

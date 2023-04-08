@@ -12,22 +12,30 @@ import FloatButton from '@components/floatButton';
 import Item from '@components/item';
 import Layout from '@components/layout';
 import useUser from '@libs/client/useUser';
+import useSWR from 'swr';
+import { Product } from '@prisma/client';
+
+interface ProductsResponse {
+  ok: boolean;
+  products: Product[];
+}
 
 const Home: NextPage = () => {
-  const { user } = useUser();
-  console.log(user);
+  const { user, isLoading } = useUser();
+  const { data } = useSWR<ProductsResponse>('/api/products');
+  console.log(data?.products);
   return (
     <Layout hasTabBar={true} title="Home">
       <div className="grid grid-cols-2 gap-2  items-stretch w-full px-4">
-        {[1, 2, 3, 4, 5, 6, 7].map((_, i) => (
+        {data?.products.map((product) => (
           <Item
-            key={i}
-            id={i}
-            title="title"
-            description="description in details"
-            comments={i * 3}
-            liked={i}
-            price={99.0}
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            description={product.description}
+            comments={3}
+            liked={2}
+            price={product.price}
           />
         ))}
         <FloatButton href="/products/upload">

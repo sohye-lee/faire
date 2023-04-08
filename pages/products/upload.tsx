@@ -4,29 +4,38 @@ import { FieldErrors, useForm } from 'react-hook-form';
 import Button from '@components/button';
 import Input from '@components/input';
 import Layout from '@components/layout';
+import useMutation from '@libs/client/useMutation';
+import { useEffect } from 'react';
+import { Product } from '@prisma/client';
+import { useRouter } from 'next/router';
 
-interface ProductForm {
+interface ProductUploadForm {
   name: string;
   price: number;
   description?: string;
-  imgUrl?: string;
+  image?: string;
+}
+
+interface UploadProductMutation {
+  ok: boolean;
+  product: Product;
 }
 const Upload: NextPage = () => {
-  const {
-    register,
-    handleSubmit,
-    // formState: { errors },
-  } = useForm<ProductForm>();
+  const router = useRouter();
+  const [uploadProduct, { loading, data }] =
+    useMutation<UploadProductMutation>('/api/products');
+  const { register, handleSubmit } = useForm<ProductUploadForm>();
 
-  const onValid = (data: ProductForm) => {
-    console.log(data);
+  const onValid = (data: ProductUploadForm) => {
+    if (loading) return;
+    uploadProduct(data);
   };
-
-  // const onInvalid = (errors: FieldErrors) => {
-  //   console.log(errors);
-  // };
-
-  // console.log(errors);
+  useEffect(() => {
+    if (data?.ok) {
+      router.replace(`/products/${data.product.id}`);
+      console.log('received: ', data);
+    }
+  }, [data, router]);
   return (
     <Layout title={'Upload Your Product'} canGoBack>
       <form
@@ -50,17 +59,12 @@ const Upload: NextPage = () => {
               />
             </svg>
 
-            <input {...register('imgUrl')} className="hidden" type="file" />
+            <input className="hidden" name="image" type="file" />
           </label>
         </div>
         <Input
-          {...register('name', {
-            required: 'Item name is required.',
-            minLength: {
-              value: 8,
-              message: 'Item name should be longer than 7 chars.',
-            },
-          })}
+          id="name"
+          register={register('name')}
           label="Name"
           name="name"
           placeholder="name of the product"
@@ -69,7 +73,7 @@ const Upload: NextPage = () => {
         />
         <Input
           id="price"
-          {...register('price', { required: 'Price is required.', min: 3 })}
+          register={register('price')}
           type="price"
           label="Price"
           name="price"
@@ -78,14 +82,18 @@ const Upload: NextPage = () => {
         />
         <Input
           id="description"
-          {...register('description')}
+          register={register('description')}
           type="textarea"
           label="Description"
           name="description"
           placeholder="details of the product"
         />
 
-        <Button text="Upload Product" filled={true} large={true} />
+        <Button
+          text={loading ? 'Loading ···' : 'Upload Product'}
+          filled={true}
+          large={true}
+        />
       </form>
     </Layout>
   );
