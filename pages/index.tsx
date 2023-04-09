@@ -23,21 +23,22 @@ interface ProductsResponse {
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
   const { data } = useSWR<ProductsResponse>('/api/products');
-  console.log(data?.products);
   return (
     <Layout hasTabBar={true} title="Home">
       <div className="grid grid-cols-2 gap-2  items-stretch w-full px-4">
-        {data?.products.map((product) => (
-          <Item
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            description={product.description}
-            comments={3}
-            liked={2}
-            price={product.price}
-          />
-        ))}
+        {data
+          ? data?.products.map((product) => (
+              <Item
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                description={product.description}
+                comments={3}
+                liked={2}
+                price={product.price}
+              />
+            ))
+          : null}
         <FloatButton href="/products/upload">
           <RiAddLine color="white" />
         </FloatButton>
