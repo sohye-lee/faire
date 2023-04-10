@@ -3,25 +3,33 @@ import Link from 'next/link';
 import Button from '@components/button';
 import FloatButton from '@components/floatButton';
 import Layout from '@components/layout';
+import useMutation from '@libs/client/useMutation';
+import { Post } from '@prisma/client';
+import useSWR from 'swr';
 
+interface PostResponse {
+  ok: boolean;
+  posts: Post[];
+}
 const Community: NextPage = () => {
+  const { data } = useSWR<PostResponse>('/api/posts');
   return (
     <Layout title={'Community'} hasTabBar={true} canGoBack={false}>
       <div className="flex flex-col space-y-5">
-        {[1, 2, 3, 4, 5, 6].map((_, i) => (
-          <div key={i}>
+        {data?.posts?.map((post) => (
+          <div key={post?.id}>
             <div className="px-4">
               <span className="inline-block py-0-5 px-2 bg-purple-200 text-gray-600 text-sm">
                 Question
               </span>
               <span className="block font-serif font-medium text-lg mt-3">
                 <span className="text-2xl font-bold text-purple-600">Q.</span>{' '}
-                What is the best mandu restaurant?
+                {post?.question}
               </span>
               <div className="w-full flex justify-end text-gray-500 text-sm font-sans mt-3">
                 <span>Sohye</span>,<span className="ml-2">18hr ago</span>
               </div>
-              <Link href={`/community/${i}`}>
+              <Link href={`/community/${post?.id}`}>
                 <div className="w-full flex justify-end mt-2 mb-3 cursor-pointer ">
                   <span className="underline text-xs borde text-purple-500">
                     Read More

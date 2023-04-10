@@ -14,10 +14,17 @@ import Layout from '@components/layout';
 import useUser from '@libs/client/useUser';
 import useSWR from 'swr';
 import { Product } from '@prisma/client';
+import Loading from '@components/loading';
+
+interface ProductWithCount extends Product {
+  _count: {
+    favorites: number;
+  };
+}
 
 interface ProductsResponse {
   ok: boolean;
-  products: Product[];
+  products: ProductWithCount[];
 }
 
 const Home: NextPage = () => {
@@ -34,7 +41,7 @@ const Home: NextPage = () => {
                 name={product.name}
                 description={product.description}
                 comments={3}
-                liked={2}
+                liked={product._count.favorites}
                 price={product.price}
               />
             ))

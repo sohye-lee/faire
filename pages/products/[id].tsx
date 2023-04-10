@@ -1,27 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { NextPage } from 'next';
 import Layout from '@components/layout';
 import Button from '@components/button';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import Loading from '@components/loading';
+import Link from 'next/link';
+import { Product, User } from '@prisma/client';
+import useMutation from '@libs/client/useMutation';
+import {
+  RiHeart2Line,
+  RiHeart3Line,
+  RiHeart2Fill,
+  RiAddLine,
+  RiChat2Line,
+  RiChat3Line,
+} from 'react-icons/ri';
+import useUser from '@libs/client/useUser';
 
-interface ItemProps {
-  id: number;
-  title: string;
-  category: string;
-  description: string;
-  price: number;
-  comments: number;
-  hearts: number;
+interface ProductWithUser extends Product {
+  user: User;
 }
+
+interface ItemDetailResponse {
+  ok: boolean;
+  product: ProductWithUser;
+  relatedProducts: Product[];
+  isFavorited: boolean;
+}
+
 const ItemDetail: NextPage = () => {
   const router = useRouter();
-  const { data } = useSWR(
+  const { data, mutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
-  console.log(data);
-  console.log(router.query.id);
+  const [toggleFavorite] = useMutation(
+    `/api/products/${router.query.id}/favorite`
+  );
+  const onFavoriteClick = () => {
+    toggleFavorite({});
+    if (!data) return;
+    mutate({ ...data, isFavorited: !data?.isFavorited }, false);
+  };
+
   return (
     <>
       {data ? (
@@ -35,12 +56,11 @@ const ItemDetail: NextPage = () => {
                   <p className="font-medium font-serif text-sm text-gray-700">
                     {data?.product?.user?.name}
                   </p>
-                  <a
-                    href={`/users/${data?.product?.user?.id}`}
-                    className="text-xs font-medium font-sans text-gray-700"
-                  >
-                    View profile &rarr;
-                  </a>
+                  <Link href={`/users/profiles/${data?.product?.user?.id}`}>
+                    <a className="text-xs font-medium font-sans text-gray-700">
+                      View profile &rarr;
+                    </a>
+                  </Link>
                 </div>
               </div>
               <div className="mt-10">
@@ -54,9 +74,12 @@ const ItemDetail: NextPage = () => {
                 <div className="flex items-stretch space-x-2">
                   <Button large={true} filled={true} text="Talk To Seller" />
                   <Button
+                    onClick={onFavoriteClick}
                     large={false}
-                    filled={false}
-                    addClass="h-full p-3"
+                    filled={data?.isFavorited ? true : false}
+                    addClass={`h-full p-3 ${
+                      data?.isFavorited ? 'bg-purple-600 border-purple-600' : ''
+                    }`}
                     text=""
                   >
                     <svg
@@ -72,25 +95,30 @@ const ItemDetail: NextPage = () => {
                         strokeLinejoin="round"
                         strokeWidth="2"
                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        fill={data?.isFavorited ? 'currentColor' : 'none'}
                       />
                     </svg>
                   </Button>
                 </div>
               </div>
             </div>
-            <div className="mt-24">
+            <div className="mt-12">
               <h2 className="font-serif text-gray-900 text-2xl capitalize">
                 Similar items
               </h2>
               <div className="py-5 flex gap-2 overflow-scroll">
-                {[1, 2, 3, 4, 5, 6].map((_, i) => (
-                  <div key={i}>
-                    <div className="bg-slate-300 w-80 h-80" />
-                    <h3 className="text-md font-serif text-gray-700">
-                      Galaxy S60
-                    </h3>
-                    <p className="text-md font-sans text-gray-700">$6</p>
-                  </div>
+                {data?.relatedProducts?.map((product) => (
+                  <Link href={`/products/${product.id}`} key={product.id}>
+                    <a>
+                      <div className="bg-slate-300 w-80 h-80" />
+                      <h3 className="text-md font-serif text-gray-700">
+                        {product.name}
+                      </h3>
+                      <p className="text-md font-sans text-gray-700">
+                        ${product.price}
+                      </p>
+                    </a>
+                  </Link>
                 ))}
               </div>
             </div>
