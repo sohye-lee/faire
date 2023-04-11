@@ -1,22 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { NextPage } from 'next';
 import Layout from '@components/layout';
 import Button from '@components/button';
 import { useRouter } from 'next/router';
-import useSWR, { useSWRConfig } from 'swr';
+import useSWR from 'swr';
 import Loading from '@components/loading';
 import Link from 'next/link';
 import { Product, User } from '@prisma/client';
 import useMutation from '@libs/client/useMutation';
-import {
-  RiHeart2Line,
-  RiHeart3Line,
-  RiHeart2Fill,
-  RiAddLine,
-  RiChat2Line,
-  RiChat3Line,
-} from 'react-icons/ri';
-import useUser from '@libs/client/useUser';
 
 interface ProductWithUser extends Product {
   user: User;

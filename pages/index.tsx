@@ -34,7 +34,7 @@ const Home: NextPage = () => {
     <Layout hasTabBar={true} title="Home">
       <div className="grid grid-cols-2 gap-2  items-stretch w-full px-4">
         {data
-          ? data?.products.map((product) => (
+          ? data?.products?.map((product) => (
               <Item
                 key={product.id}
                 id={product.id}

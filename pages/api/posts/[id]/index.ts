@@ -24,6 +24,20 @@ async function handler(
           avatarUrl: true,
         },
       },
+      answers: {
+        select: {
+          content: true,
+          id: true,
+          createdAt: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
+            },
+          },
+        },
+      },
       _count: {
         select: {
           answers: true,
@@ -32,9 +46,22 @@ async function handler(
       },
     },
   });
+  const isVoted = Boolean(
+    await client.vote.findFirst({
+      where: {
+        userId: user?.id,
+        postId: +id?.toString()!,
+      },
+      select: {
+        id: true,
+      },
+    })
+  );
+
   res.json({
     ok: true,
     post,
+    isVoted,
   });
 }
 

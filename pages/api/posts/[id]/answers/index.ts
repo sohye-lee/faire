@@ -7,42 +7,57 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
+  const {
+    query: { id },
+    session: { user },
+  } = req;
+
+  const post = await client.post.findUnique({
+    where: {
+      id: +id?.toString()!,
+    },
+  });
+  if (!post) res.status(404).end();
+
   if (req.method === 'GET') {
-    const posts = await client.post.findMany({
+    const answers = await client.answer.findMany({
+      where: {
+        postId: +id?.toString()!,
+      },
       include: {
         user: {
-          select: { id: true, name: true },
-        },
-        _count: {
           select: {
-            votes: true,
-            answers: true,
+            name: true,
+            id: true,
+            avatarUrl: true,
           },
         },
       },
     });
     res.json({
       ok: true,
-      posts,
+      answers,
     });
   }
 
   if (req.method === 'POST') {
-    const {
-      body: { question },
-      session: { user },
-    } = req;
-    const post = await client.post.create({
+    const { content } = req.body;
+    const answer = await client.answer.create({
       data: {
-        question,
+        content,
         user: {
           connect: {
             id: user?.id,
           },
         },
+        post: {
+          connect: {
+            id: +id?.toString()!,
+          },
+        },
       },
     });
-    res.status(200).json({ ok: true, post });
+    res.status(200).json({ ok: true, answer });
   }
 }
 
