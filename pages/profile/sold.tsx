@@ -9,41 +9,56 @@ import {
   RiChat3Line,
 } from 'react-icons/ri';
 import Layout from '../../components/layout';
+import useSWR from 'swr';
+import { Product, Record } from '@prisma/client';
 
-const Sold: NextPage = () => {
+interface ProductWithCount extends Product {
+  _count: {
+    favorites: number;
+  };
+}
+interface RecordWithProduct extends Record {
+  product: ProductWithCount;
+}
+
+interface PurchasesResponse {
+  ok: boolean;
+  records: RecordWithProduct[];
+}
+
+const Purchased: NextPage = () => {
+  const { data } = useSWR<PurchasesResponse>('/api/users/me/records?type=Sale');
   return (
-    <Layout title={'You Sold'} hasTabBar={false} canGoBack={true}>
+    <Layout title={'You Liked'} hasTabBar={false} canGoBack={true}>
       <div className=" flex flex-col divide-y">
-        {[1, 2, 3, 4, 5, 6, 7].map((_, i) => (
-          <div key={i} className="px-4 py-3 flex justify-between items-end">
-            <div className="flex items-center space-x-3">
-              <div className="w-20 h-20 bg-purple-100"></div>
-              <div>
-                <div>
-                  <Link href={`/items/${[_]}`}>
-                    <a>
-                      <p className="font-serif font-bold text-md capitalize">
-                        title {_}
-                      </p>
-                    </a>
-                  </Link>
-                  <p className="font-sans text-sm font-light text-gray-600 w-full">
-                    Description Lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit.
-                  </p>
-                  <p className="font-serif text-md mt-3">$99.99</p>
+        {data?.records?.map((Sale) => (
+          <div
+            key={Sale?.id}
+            className="px-4 py-3 flex justify-between items-center"
+          >
+            <div className="flex items-center space-x-3 w-full">
+              <div className="w-24 aspect-square bg-purple-100"></div>
+              <div className=" w-full flex-column ">
+                <Link href={`/items/${Sale?.product?.id}`} className="w-full">
+                  <a className="font-serif font-bold text-md capitalize w-full ">
+                    {Sale?.product?.name}
+                  </a>
+                </Link>
+
+                <div className=" flex items-center justify-between w-full mt-2 ">
+                  <p className="font-serif text-md">${Sale?.product?.price}</p>
+                  <div className="flex space-x-3">
+                    <button className="flex items-center space-x-1">
+                      <RiHeart3Line className="" width="24" height="24" />
+                      <span>{Sale?.product?._count.favorites}</span>
+                    </button>
+                    <button className="flex items-center space-x-1">
+                      <RiChat3Line className="" width="24" height="24" />
+                      <span>3</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex space-x-3">
-              <button className="flex items-center space-x-1">
-                <RiHeart3Line className="" width="24" height="24" />
-                <span>1</span>
-              </button>
-              <button className="flex items-center space-x-1">
-                <RiChat3Line className="" width="24" height="24" />
-                <span>3</span>
-              </button>
             </div>
           </div>
         ))}
@@ -52,4 +67,4 @@ const Sold: NextPage = () => {
   );
 };
 
-export default Sold;
+export default Purchased;

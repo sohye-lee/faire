@@ -9,41 +9,64 @@ import {
   RiChat3Line,
 } from 'react-icons/ri';
 import Layout from '../../components/layout';
+import useSWR from 'swr';
+import { Product, Record } from '@prisma/client';
+
+interface ProductWithCount extends Product {
+  _count: {
+    favorites: number;
+  };
+}
+
+interface RecordWithProduct extends Record {
+  product: ProductWithCount;
+}
+
+interface FavoritesResponse {
+  ok: true;
+  records: RecordWithProduct[];
+}
 
 const Liked: NextPage = () => {
+  const { data } = useSWR<FavoritesResponse>(
+    '/api/users/me/records?type=Favorite'
+  );
   return (
     <Layout title={'You Liked'} hasTabBar={false} canGoBack={true}>
       <div className=" flex flex-col divide-y">
-        {[1, 2, 3, 4, 5, 6, 7].map((_, i) => (
-          <div key={i} className="px-4 py-3 flex justify-between items-end">
-            <div className="flex items-center space-x-3">
-              <div className="w-20 h-20 bg-purple-100"></div>
-              <div>
-                <div>
-                  <Link href={`/items/${[_]}`}>
-                    <a>
-                      <p className="font-serif font-bold text-md capitalize">
-                        title {_}
-                      </p>
-                    </a>
-                  </Link>
-                  <p className="font-sans text-sm font-light text-gray-600 w-full">
-                    Description Lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit.
+        {data?.records?.map((favorite) => (
+          <div
+            key={favorite.id}
+            className="px-4 py-3 flex justify-between items-center"
+          >
+            <div className="flex items-center space-x-3 w-full">
+              <div className="w-24 aspect-square bg-purple-100"></div>
+              <div className=" w-full flex-column ">
+                <Link
+                  href={`/products/${favorite?.product?.id}`}
+                  className="w-full"
+                >
+                  <a className="font-serif font-bold text-md capitalize w-full ">
+                    {favorite?.product?.name}
+                  </a>
+                </Link>
+
+                <div className=" flex items-center justify-between w-full mt-2 ">
+                  <p className="font-serif text-md">
+                    ${favorite?.product?.price}
                   </p>
-                  <p className="font-serif text-md mt-3">$99.99</p>
+                  <div className="flex space-x-3">
+                    <button className="flex items-center space-x-1">
+                      <RiHeart3Line className="" width="24" height="24" />
+                      <span>{favorite?.product?._count.favorites}</span>
+                    </button>
+                    <button className="flex items-center space-x-1">
+                      <RiChat3Line className="" width="24" height="24" />
+                      <span>3</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex space-x-3">
-              <button className="flex items-center space-x-1">
-                <RiHeart3Line className="" width="24" height="24" />
-                <span>1</span>
-              </button>
-              <button className="flex items-center space-x-1">
-                <RiChat3Line className="" width="24" height="24" />
-                <span>3</span>
-              </button>
             </div>
           </div>
         ))}

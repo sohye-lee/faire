@@ -13,12 +13,15 @@ import Item from '@components/item';
 import Layout from '@components/layout';
 import useUser from '@libs/client/useUser';
 import useSWR from 'swr';
-import { Product } from '@prisma/client';
+import { Product, Record } from '@prisma/client';
 import Loading from '@components/loading';
+import useCoords from '@libs/client/useCoords';
 
 interface ProductWithCount extends Product {
+  records: Record[];
   _count: {
     favorites: number;
+    records: number;
   };
 }
 
@@ -28,24 +31,36 @@ interface ProductsResponse {
 }
 
 const Home: NextPage = () => {
-  const { user, isLoading } = useUser();
-  const { data } = useSWR<ProductsResponse>('/api/products');
+  const { latitude, longitude } = useCoords();
+  const { data } = useSWR<ProductsResponse>(
+    latitude && longitude
+      ? `/api/products?latitude=${latitude}&longitude=${longitude}`
+      : null
+  );
   return (
     <Layout hasTabBar={true} title="Home">
-      <div className="grid grid-cols-2 gap-2  items-stretch w-full px-4">
-        {data
-          ? data?.products?.map((product) => (
-              <Item
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                description={product.description}
-                comments={3}
-                liked={product._count.favorites}
-                price={product.price}
-              />
-            ))
-          : null}
+      <div
+        className={`grid ${
+          data ? 'grid-cols-2' : 'grid-cols-1'
+        } gap-2  items-stretch w-full px-4`}
+      >
+        {data ? (
+          data?.products?.map((product) => (
+            <Item
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              description={product.description}
+              comments={3}
+              favorites={
+                product.records.filter((r) => r.type == 'Favorite').length
+              }
+              price={product.price}
+            />
+          ))
+        ) : (
+          <Loading />
+        )}
         <FloatButton href="/products/upload">
           <RiAddLine color="white" />
         </FloatButton>

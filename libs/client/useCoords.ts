@@ -10,8 +10,10 @@ export default function useCoords() {
     latitude: null,
     longitude: null,
   });
-  const onSuccess = (coords: GeolocationPosition) => {
-    console.log(coords);
+  const onSuccess = ({
+    coords: { latitude, longitude },
+  }: GeolocationPosition) => {
+    setCoords({ latitude, longitude });
   };
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(onSuccess);

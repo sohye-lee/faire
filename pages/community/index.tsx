@@ -6,6 +6,7 @@ import Layout from '@components/layout';
 import useMutation from '@libs/client/useMutation';
 import { Post, User } from '@prisma/client';
 import useSWR from 'swr';
+import useCoords from '@libs/client/useCoords';
 
 interface PostWithUser extends Post {
   user: User;
@@ -20,7 +21,12 @@ interface PostResponse {
 }
 
 const Community: NextPage = () => {
-  const { data } = useSWR<PostResponse>('/api/posts');
+  const { latitude, longitude } = useCoords();
+  const { data } = useSWR<PostResponse>(
+    latitude && longitude
+      ? `/api/posts?latitude=${latitude}&longitude=${longitude}`
+      : null
+  );
   return (
     <Layout title={'Community'} hasTabBar={true} canGoBack={false}>
       <div className="flex flex-col space-y-5">
@@ -40,6 +46,7 @@ const Community: NextPage = () => {
                 <span>{post?.user.name}</span>,
                 <span className="ml-2">{post?.createdAt.toLocaleString()}</span>
               </div>
+
               <Link href={`/community/${post?.id}`}>
                 <a className="w-full flex justify-end mt-2 mb-3 cursor-pointer ">
                   <span className="underline text-xs borde text-purple-500">
@@ -58,9 +65,9 @@ const Community: NextPage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#000000"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M16 12l-4-4-4 4M12 16V9" />

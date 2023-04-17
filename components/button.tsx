@@ -26,7 +26,7 @@ export default function Button({
           filled
             ? 'bg-black hover:bg-gray-800 text-white border-black'
             : 'bg-white hover:bg-slate-100 text-gray-800 border-gray-800'
-        }  border  focus:outline-none focus:ring-1 focus:ring-purple-500`,
+        }  border-2  focus:outline-none focus:ring-1 focus:ring-purple-500`,
         large ? `w-full text-sm py-3 ${addClass}` : `text-xs ${addClass}`
       )}
       onClick={onClick}

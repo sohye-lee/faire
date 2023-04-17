@@ -1,3 +1,4 @@
+import { Favorite } from '@prisma/client';
 import client from '@libs/server/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import withHandler, { ResponseType } from '@libs/server/withHandler';
@@ -8,11 +9,30 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   if (req.method === 'GET') {
+    const { latitude, longitude } = req.query;
+    const latitudeNum = parseFloat(latitude!.toString());
+    const longitudeeNum = parseFloat(longitude!.toString());
     const products = await client.product.findMany({
+      where: {
+        latitude: {
+          gte: latitudeNum - 0.02,
+          lte: latitudeNum + 0.02,
+        },
+        longitude: {
+          gte: longitudeeNum - 0.02,
+          lte: longitudeeNum + 0.02,
+        },
+      },
       include: {
+        records: {
+          select: {
+            type: true,
+          },
+        },
         _count: {
           select: {
             favorites: true,
+            records: true,
           },
         },
       },
@@ -25,7 +45,7 @@ async function handler(
 
   if (req.method === 'POST') {
     const {
-      body: { name, price, description },
+      body: { name, price, description, latitude, longitude },
       session: { user },
     } = req;
     const product = await client.product.create({
@@ -33,6 +53,8 @@ async function handler(
         name,
         price: +price,
         description,
+        latitude,
+        longitude,
         image: 'xx',
         user: {
           connect: {

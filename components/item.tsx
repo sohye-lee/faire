@@ -1,3 +1,4 @@
+import { Favorite } from '@prisma/client';
 import Link from 'next/link';
 import { RiHeart3Line, RiChat3Line } from 'react-icons/ri';
 
@@ -7,14 +8,14 @@ interface ItemProps {
   price: number;
   description: string;
   comments: number;
-  liked: number;
+  favorites: number;
 }
 
 export default function Item({
   name,
   price = 0,
   comments = 0,
-  liked = 0,
+  favorites = 0,
   id,
   description,
 }: ItemProps) {
@@ -24,7 +25,7 @@ export default function Item({
         <div className="absolute top-2 right-2 flex items-center justify-end space-x-3">
           <button className="flex items-center space-x-1">
             <RiHeart3Line className="" width="24" height="24" />
-            <span>{liked}</span>
+            <span>{favorites}</span>
           </button>
           <button className="flex items-center space-x-1">
             <RiChat3Line className="" width="24" height="24" />
