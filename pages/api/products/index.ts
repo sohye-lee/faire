@@ -1,4 +1,3 @@
-import { Favorite } from '@prisma/client';
 import client from '@libs/server/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import withHandler, { ResponseType } from '@libs/server/withHandler';
@@ -31,7 +30,6 @@ async function handler(
         },
         _count: {
           select: {
-            favorites: true,
             records: true,
           },
         },

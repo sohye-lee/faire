@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import withHandler, { ResponseType } from '@libs/server/withHandler';
 import { withApiSession } from '@libs/server/withSession';
 import { Type } from '@prisma/client';
-import favorites from 'pages/api/users/me/favorites';
 
 async function handler(
   req: NextApiRequest,
@@ -29,7 +28,7 @@ async function handler(
           price: true,
           _count: {
             select: {
-              favorites: true,
+              records: true,
             },
           },
         },

@@ -1,4 +1,3 @@
-import { Favorite } from '@prisma/client';
 import Link from 'next/link';
 import { RiHeart3Line, RiChat3Line } from 'react-icons/ri';
 
