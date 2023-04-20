@@ -115,6 +115,6 @@ model Record {
 
 enum Type {
   Purchase
-  Sale 
+  Sale
   Favorite
 }

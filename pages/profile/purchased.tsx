@@ -31,7 +31,7 @@ const Purchased: NextPage = () => {
     '/api/users/me/records?type=Purchase'
   );
   return (
-    <Layout title={'You Liked'} hasTabBar={false} canGoBack={true}>
+    <Layout title={'You Purchased'} hasTabBar={false} canGoBack={true}>
       <div className=" flex flex-col divide-y">
         {data?.records?.map((purchase) => (
           <div
@@ -56,12 +56,7 @@ const Purchased: NextPage = () => {
                   </p>
                   <div className="flex space-x-3">
                     <button className="flex items-center space-x-1">
-                      <RiHeart3Line className="" width="24" height="24" />
-                      <span>{purchase?.product?._count.favorites}</span>
-                    </button>
-                    <button className="flex items-center space-x-1">
-                      <RiChat3Line className="" width="24" height="24" />
-                      <span>3</span>
+                      <span>{purchase?.product?.createdAt.toUTCString()}</span>
                     </button>
                   </div>
                 </div>

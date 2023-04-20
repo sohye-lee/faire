@@ -21,21 +21,13 @@ async function handler(
     },
     include: {
       product: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          price: true,
-          _count: {
-            select: {
-              records: true,
-            },
-          },
+        include: {
+          records: true,
         },
       },
     },
   });
-
+  console.log(records);
   res.status(200).json({ ok: true, records });
 }
 

@@ -11,15 +11,14 @@ import {
 import Layout from '../../components/layout';
 import useSWR from 'swr';
 import { Product, Record } from '@prisma/client';
+import { useRouter } from 'next/router';
 
-interface ProductWithCount extends Product {
-  _count: {
-    favorites: number;
-  };
+interface ProductWithRecords extends Product {
+  records: Record[];
 }
 
 interface RecordWithProduct extends Record {
-  product: ProductWithCount;
+  product: ProductWithRecords;
 }
 
 interface FavoritesResponse {
@@ -28,42 +27,54 @@ interface FavoritesResponse {
 }
 
 const Liked: NextPage = () => {
+  const router = useRouter();
+  const { type } = router.query;
   const { data } = useSWR<FavoritesResponse>(
-    '/api/users/me/records?type=Favorite'
+    `/api/users/me/records?type=${type}`
   );
+
   return (
     <Layout title={'You Liked'} hasTabBar={false} canGoBack={true}>
       <div className=" flex flex-col divide-y">
-        {data?.records?.map((favorite) => (
+        {data?.records?.map((record) => (
           <div
-            key={favorite.id}
+            key={record.id}
             className="px-4 py-3 flex justify-between items-center"
           >
             <div className="flex items-center space-x-3 w-full">
               <div className="w-24 aspect-square bg-purple-100"></div>
               <div className=" w-full flex-column ">
                 <Link
-                  href={`/products/${favorite?.product?.id}`}
+                  href={`/products/${record?.product?.id}`}
                   className="w-full"
                 >
                   <a className="font-serif font-bold text-md capitalize w-full ">
-                    {favorite?.product?.name}
+                    {record?.product?.name}
                   </a>
                 </Link>
 
                 <div className=" flex items-center justify-between w-full mt-2 ">
                   <p className="font-serif text-md">
-                    ${favorite?.product?.price}
+                    ${record?.product?.price}
                   </p>
                   <div className="flex space-x-3">
-                    <button className="flex items-center space-x-1">
+                    <span className="flex items-center text-sm text-gray-600">
                       <RiHeart3Line className="" width="24" height="24" />
-                      <span>{favorite?.product?._count.favorites}</span>
-                    </button>
-                    <button className="flex items-center space-x-1">
-                      <RiChat3Line className="" width="24" height="24" />
-                      <span>3</span>
-                    </button>
+                      <span className="ml-1">
+                        {
+                          record?.product?.records.filter(
+                            (r) => r.toString() == 'Favorite'
+                          ).length
+                        }
+                      </span>
+                    </span>
+                    <span className="text-sm text-gray-600">
+                      {new Date(record?.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </span>
                   </div>
                 </div>
               </div>

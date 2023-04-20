@@ -26,7 +26,7 @@ const Profile: NextPage = () => {
           <div className="h-10 w-10 rounded-full bg-slate-200" />
           <div>
             <p className="font-medium font-serif text-sm text-gray-700">
-              Steve Jobs
+              {user?.name}
             </p>
             <Link href="/profile/edit">
               <p className="text-xs font-medium font-sans text-gray-700">
@@ -36,7 +36,7 @@ const Profile: NextPage = () => {
           </div>
         </div>
         <div className="flex justify-between px-4">
-          <Link href="/profile/sold">
+          <Link href="/profile/records?type=Sale">
             <div className="flex flex-col items-center space-y-1">
               <div className="hover:bg-gray-800 hover:ring-1 hover:ring-offset-1 hover:ring-purple-600 w-16 h-16 flex items-center justify-center bg-black text-white rounded-full">
                 <svg
@@ -57,7 +57,7 @@ const Profile: NextPage = () => {
               <span className="font-serif">Sold</span>
             </div>
           </Link>
-          <Link href="/profile/purchased">
+          <Link href="/profile/records?type=Purchase">
             <div className="flex flex-col items-center space-y-1">
               <div className="hover:bg-gray-800 hover:ring-1 hover:ring-offset-1 hover:ring-purple-600 w-16 h-16 flex items-center justify-center bg-black text-white rounded-full">
                 <svg
@@ -78,7 +78,7 @@ const Profile: NextPage = () => {
               <span className="font-serif">Purchases</span>
             </div>
           </Link>
-          <Link href="/profile/liked">
+          <Link href="/profile/records?type=Favorite">
             <div className="flex flex-col items-center space-y-1">
               <div className="hover:bg-gray-800 hover:ring-1 hover:ring-offset-1 hover:ring-purple-600 w-16 h-16 flex items-center justify-center bg-black text-white rounded-full">
                 <svg
@@ -109,53 +109,6 @@ const Profile: NextPage = () => {
                   {review?.createdBy?.name}
                 </h4>
                 <Rating rating={review?.score} />
-                {/* <div className="flex items-center">
-                  <svg
-                    className="text-yellow-400 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  <svg
-                    className="text-yellow-400 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  <svg
-                    className="text-yellow-400 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  <svg
-                    className="text-yellow-400 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  <svg
-                    className="text-gray-400 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                </div> */}
               </div>
             </div>
             <div className="mt-2">

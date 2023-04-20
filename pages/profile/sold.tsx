@@ -1,13 +1,6 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import {
-  RiHeart2Line,
-  RiHeart2Fill,
-  RiAddLine,
-  RiChat2Line,
-  RiHeart3Line,
-  RiChat3Line,
-} from 'react-icons/ri';
+import { RiHeart3Line, RiChat3Line } from 'react-icons/ri';
 import Layout from '../../components/layout';
 import useSWR from 'swr';
 import { Product, Record } from '@prisma/client';
@@ -26,10 +19,10 @@ interface PurchasesResponse {
   records: RecordWithProduct[];
 }
 
-const Purchased: NextPage = () => {
+const Sales: NextPage = () => {
   const { data } = useSWR<PurchasesResponse>('/api/users/me/records?type=Sale');
   return (
-    <Layout title={'You Liked'} hasTabBar={false} canGoBack={true}>
+    <Layout title={'You Sold'} hasTabBar={false} canGoBack={true}>
       <div className=" flex flex-col divide-y">
         {data?.records?.map((Sale) => (
           <div
@@ -53,8 +46,7 @@ const Purchased: NextPage = () => {
                       <span>{Sale?.product?._count.favorites}</span>
                     </button>
                     <button className="flex items-center space-x-1">
-                      <RiChat3Line className="" width="24" height="24" />
-                      <span>3</span>
+                      <span>{`${Sale?.createdAt.getMonth()} ${Sale?.createdAt.getDay()}, ${Sale?.createdAt.getFullYear()}`}</span>
                     </button>
                   </div>
                 </div>
@@ -67,4 +59,4 @@ const Purchased: NextPage = () => {
   );
 };
 
-export default Purchased;
+export default Sales;
