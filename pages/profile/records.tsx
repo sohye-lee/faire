@@ -32,9 +32,17 @@ const Liked: NextPage = () => {
   const { data } = useSWR<FavoritesResponse>(
     `/api/users/me/records?type=${type}`
   );
-
+  let title = '';
+  switch (type) {
+    case 'Favorite':
+      title = 'You liked';
+    case 'Purchase':
+      title = 'You purchased';
+    case 'Sale':
+      title = 'You sold';
+  }
   return (
-    <Layout title={'You Liked'} hasTabBar={false} canGoBack={true}>
+    <Layout title={title} hasTabBar={false} canGoBack={true}>
       <div className=" flex flex-col divide-y">
         {data?.records?.map((record) => (
           <div
@@ -54,10 +62,10 @@ const Liked: NextPage = () => {
                 </Link>
 
                 <div className=" flex items-center justify-between w-full mt-2 ">
-                  <p className="font-serif text-md">
-                    ${record?.product?.price}
-                  </p>
-                  <div className="flex space-x-3">
+                  <div className="flex items-center space-x-3">
+                    <p className="font-serif text-md">
+                      ${record?.product?.price}
+                    </p>
                     <span className="flex items-center text-sm text-gray-600">
                       <RiHeart3Line className="" width="24" height="24" />
                       <span className="ml-1">
@@ -68,14 +76,14 @@ const Liked: NextPage = () => {
                         }
                       </span>
                     </span>
-                    <span className="text-sm text-gray-600">
-                      {new Date(record?.createdAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </span>
                   </div>
+                  <span className="text-sm text-gray-600">
+                    {new Date(record?.createdAt).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </span>
                 </div>
               </div>
             </div>
