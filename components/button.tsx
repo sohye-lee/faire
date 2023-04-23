@@ -6,6 +6,7 @@ interface ButtonProps {
   text: string;
   addClass?: string;
   children?: React.ReactNode;
+  loading?: boolean;
   [key: string]: any;
 }
 
@@ -16,6 +17,7 @@ export default function Button({
   text,
   addClass,
   children,
+  loading = false,
   ...rest
 }: ButtonProps) {
   return (
@@ -31,7 +33,9 @@ export default function Button({
       )}
       onClick={onClick}
     >
-      <span dangerouslySetInnerHTML={{ __html: text }} />
+      <span
+        dangerouslySetInnerHTML={{ __html: loading ? 'Loading···' : text }}
+      />
       {children}
     </button>
   );
