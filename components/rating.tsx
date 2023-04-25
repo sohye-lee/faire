@@ -26,11 +26,11 @@ export default function Rating({ rating }: Rating) {
     <div className="flex items-center">
       {stars.map((star, i) =>
         star == 0 ? (
-          <RiStarSLine style={{ color: 'purple' }} />
+          <RiStarSLine style={{ color: 'purple' }} key={i} />
         ) : star == 0.5 ? (
-          <RiStarHalfSFill style={{ color: 'purple' }} />
+          <RiStarHalfSFill style={{ color: 'purple' }} key={i} />
         ) : (
-          <RiStarSFill style={{ color: 'purple' }} />
+          <RiStarSFill style={{ color: 'purple' }} key={i} />
         )
       )}
     </div>

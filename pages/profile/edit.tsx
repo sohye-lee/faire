@@ -27,25 +27,28 @@ const EditProfile: NextPage = () => {
     setError,
     formState: { errors },
   } = useForm<EditProfileForm>();
-
+  useEffect(() => {
+    if (user?.name) setValue('name', user?.name);
+    if (user?.email) setValue('email', user?.email);
+    if (user?.phone) setValue('phone', user?.phone);
+  }, [user, setValue]);
   const [editProfile, { data, loading }] =
     useMutation<EditProfileResponse>(`/api/users/me`);
   const onValid = ({ email, phone, name }: EditProfileForm) => {
     if (email === '' && phone === '') {
       setError('formErrors', { message: 'Email or Phone is required.' });
     }
+    if (name === '') {
+      setError('formErrors', { message: 'Name is required.' });
+    }
     editProfile({ name, email, phone });
   };
 
   useEffect(() => {
-    if (user?.name) setValue('name', user?.name);
-    if (user?.email) setValue('email', user?.email);
-    if (user?.phone) setValue('phone', user?.phone);
-
-    if (data && !data.ok) {
+    if (data && !data.ok && data.error) {
       setError('formErrors', { message: data?.error });
     }
-  }, [user, user?.name, setValue, data, setError]);
+  }, [data, setError]);
 
   return (
     <Layout title={'Edit Your Profile'} hasTabBar={false} canGoBack>
@@ -96,7 +99,7 @@ const EditProfile: NextPage = () => {
                   // placeholder={user?.phone}
                 />
               </div>
-              {errors.formErrors ? (
+              {errors?.formErrors ? (
                 <span className="text-sm text-purple-500 font-light">
                   {errors.formErrors.message}
                 </span>

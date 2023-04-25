@@ -67,7 +67,7 @@ export default function Layout({
                   <span className="text-xs font-sans">Chats</span>
                 </a>
               </Link>
-              <Link href="/live">
+              <Link href="/streams">
                 <a className="hover:text-purple-600 flex flex-col items-center justify-content text-3xl text-gray-800 w-1/5">
                   <RiVideoLine />
                   <span className="text-xs font-sans">Live</span>

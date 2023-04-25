@@ -18,8 +18,8 @@ async function handler(
 
   if (req.method === 'POST') {
     const {
-      body: { name, email, phone },
       session: { user },
+      body: { email, phone, name },
     } = req;
 
     const currentUser = await client.user.findUnique({
@@ -27,78 +27,72 @@ async function handler(
         id: user?.id,
       },
     });
-    if (email) {
-      const alreadyExists = await client.user.findUnique({
+
+    if (email && email !== currentUser?.email) {
+      const alreadyExists = Boolean(
+        await client.user.findUnique({
+          where: {
+            email,
+          },
+          select: {
+            id: true,
+          },
+        })
+      );
+      if (alreadyExists) {
+        return res.json({
+          ok: false,
+          error: 'Email already taken.',
+        });
+      }
+      await client.user.update({
         where: {
+          id: user?.id,
+        },
+        data: {
           email,
         },
-        select: {
-          id: true,
-          name: true,
-        },
       });
-
-      if (alreadyExists && name === alreadyExists?.name) {
-        return res.json({ ok: false, error: 'Email already taken.' });
-      } else if (name != alreadyExists?.name) {
-        if (name) {
-          await client.user.update({
-            where: {
-              id: user?.id,
-            },
-            data: {
-              name,
-            },
-          });
-        }
-      } else {
-        await client.user.update({
+      res.json({ ok: true });
+    }
+    if (phone && phone !== currentUser?.phone) {
+      const alreadyExists = Boolean(
+        await client.user.findUnique({
           where: {
-            id: user?.id,
+            phone,
           },
-          data: {
-            email,
-            name,
+          select: {
+            id: true,
           },
+        })
+      );
+      if (alreadyExists) {
+        return res.json({
+          ok: false,
+          error: 'Phone already in use.',
         });
       }
-    }
-
-    if (phone) {
-      const alreadyExists = await client.user.findUnique({
+      await client.user.update({
         where: {
+          id: user?.id,
+        },
+        data: {
           phone,
         },
-        select: {
-          id: true,
-          name: true,
-        },
       });
-      if (alreadyExists && alreadyExists.name === name) {
-        return res.json({ ok: false, error: 'Phone number already exists.' });
-      } else if (alreadyExists?.name !== name) {
-        await client.user.update({
-          where: {
-            id: user?.id,
-          },
-          data: {
-            name,
-          },
-        });
-        console.log(name);
-      } else {
-        await client.user.update({
-          where: {
-            id: user?.id,
-          },
-          data: {
-            phone,
-            name,
-          },
-        });
-      }
+      res.json({ ok: true });
     }
 
+    if (name) {
+      await client.user.update({
+        where: {
+          id: user?.id,
+        },
+        data: {
+          name,
+        },
+      });
+    }
     res.json({ ok: true });
   }
 }
