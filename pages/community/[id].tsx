@@ -10,6 +10,7 @@ import useMutation from '@libs/client/useMutation';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import Loading from '@components/loading';
+import { dateTimeToString } from '@libs/client/myFuncs';
 
 interface AnswerWithUser extends Answer {
   user: User;
@@ -163,7 +164,7 @@ const CommunitPostDetail: NextPage = () => {
                       {answer.user.name}
                     </span>
                     <span className="text-xs font-sans text-gray-600 block">
-                      {answer?.createdAt?.toString()}
+                      {dateTimeToString(answer?.createdAt!)}
                     </span>
                     <p className="text-md font-sans text-gray-900 mt-2">
                       {answer.content}

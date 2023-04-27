@@ -7,43 +7,43 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
+  const {
+    body: { message },
+    query: { id },
+    session: { user },
+  } = req;
+
   if (req.method === 'GET') {
-    const streams = await client.stream.findMany({
-      include: {
-        messages: true,
-        user: { select: { id: true, name: true, avatarUrl: true } },
-        _count: {
-          select: {
-            messages: true,
-          },
-        },
+    const messages = await client.message.findMany({
+      where: {
+        streamId: +id!,
       },
     });
-    res.json({
-      ok: true,
-      streams,
-    });
+    res.json({ ok: true, messages });
   }
 
   if (req.method === 'POST') {
-    const {
-      body: { name, price, description },
-      session: { user },
-    } = req;
-    const stream = await client.stream.create({
+    if (!message || message === '' || !id) {
+      return res.status(400).end();
+    }
+
+    const newMessage = await client.message.create({
       data: {
-        name,
-        price,
-        description,
-        image: 'xx',
+        message,
         user: {
           connect: {
             id: user?.id,
           },
         },
+        stream: {
+          connect: {
+            id: +id.toString(),
+          },
+        },
       },
     });
-    res.status(200).json({ ok: true, stream });
+
+    res.json({ ok: true, message: newMessage });
   }
 }
 

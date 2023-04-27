@@ -7,6 +7,7 @@ import useMutation from '@libs/client/useMutation';
 import { Post, User } from '@prisma/client';
 import useSWR from 'swr';
 import useCoords from '@libs/client/useCoords';
+import { dateTimeToString } from '@libs/client/myFuncs';
 
 interface PostWithUser extends Post {
   user: User;
@@ -43,8 +44,10 @@ const Community: NextPage = () => {
                 </span>
               </Link>
               <div className="w-full flex justify-end text-gray-500 text-sm font-sans mt-3">
-                <span>{post?.user.name}</span>,
-                <span className="ml-2">{post?.createdAt.toLocaleString()}</span>
+                <span className="mr-2">{post?.user.name}</span> |
+                <span className="ml-2">
+                  {dateTimeToString(post?.createdAt!)}
+                </span>
               </div>
 
               <Link href={`/community/${post?.id}`}>

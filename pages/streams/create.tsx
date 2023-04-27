@@ -57,7 +57,7 @@ const CreateLive: NextPage = () => {
           required
         />
         <Input
-          register={register('price', { required: true })}
+          register={register('price', { required: true, valueAsNumber: true })}
           type="price"
           placeholder="0.00"
           name="price"

@@ -16,11 +16,3 @@ const cookieOptions = {
 export function withApiSession(fn: any) {
   return withIronSessionApiRoute(fn, cookieOptions);
 }
-
-declare module 'iron-session' {
-  interface IronSessionData {
-    user?: {
-      id: number;
-    };
-  }
-}

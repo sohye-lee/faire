@@ -12,6 +12,7 @@ import Layout from '../../components/layout';
 import useSWR from 'swr';
 import { Product, Record } from '@prisma/client';
 import { useRouter } from 'next/router';
+import { dateToString } from '@libs/client/myFuncs';
 
 interface ProductWithRecords extends Product {
   records: Record[];
@@ -78,11 +79,7 @@ const Liked: NextPage = () => {
                     </span>
                   </div>
                   <span className="text-sm text-gray-600">
-                    {new Date(record?.createdAt).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })}
+                    {dateToString(record?.createdAt)}
                   </span>
                 </div>
               </div>
