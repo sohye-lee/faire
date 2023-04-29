@@ -4,13 +4,14 @@ import Input from '../../components/input';
 import Layout from '../../components/layout';
 import useUser from '@libs/client/useUser';
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useMutation from '@libs/client/useMutation';
 
 interface EditProfileForm {
   email?: string;
   phone?: string;
   name?: string;
+  avatarUrl?: string;
   formErrors?: string;
 }
 
@@ -25,6 +26,7 @@ const EditProfile: NextPage = () => {
     setValue,
     handleSubmit,
     setError,
+    watch,
     formState: { errors },
   } = useForm<EditProfileForm>();
   useEffect(() => {
@@ -34,14 +36,15 @@ const EditProfile: NextPage = () => {
   }, [user, setValue]);
   const [editProfile, { data, loading }] =
     useMutation<EditProfileResponse>(`/api/users/me`);
-  const onValid = ({ email, phone, name }: EditProfileForm) => {
+  const onValid = ({ email, phone, name, avatarUrl }: EditProfileForm) => {
     if (email === '' && phone === '') {
       setError('formErrors', { message: 'Email or Phone is required.' });
     }
     if (name === '') {
       setError('formErrors', { message: 'Name is required.' });
     }
-    editProfile({ name, email, phone });
+    editProfile({ name, email, phone, avatarUrl });
+    console.log(avatarUrl);
   };
 
   useEffect(() => {
@@ -50,13 +53,19 @@ const EditProfile: NextPage = () => {
     }
   }, [data, setError]);
 
+  const [avatarPreview, setAvatarPreview] = useState('');
+  const avatar = watch('avatarUrl');
+  useEffect(() => {
+    if (avatar && avatar.length > 0) {
+      const file = avatar[0];
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  }, [avatar]);
+
   return (
     <Layout title={'Edit Your Profile'} hasTabBar={false} canGoBack>
       <div className="pt-8">
         <div>
-          {/* <h3 className="font-serif text-center text-3xl mb-5">
-            Edit Your Profile
-          </h3> */}
           <div>
             <form
               onSubmit={handleSubmit(onValid)}
@@ -64,7 +73,20 @@ const EditProfile: NextPage = () => {
             >
               <div className="w-full space-y-3">
                 <div className="flex space-x-3 items-center pb-3">
-                  <div className="h-24 w-24 rounded-full bg-slate-200" />
+                  {avatarPreview ? (
+                    <img
+                      src={avatarPreview}
+                      className="h-24 w-24 rounded-full bg-slate-200"
+                    />
+                  ) : (
+                    <div className="h-24 w-24 rounded-full bg-purple-400 flex items-center justify-center">
+                      <span className="text-white font-sans text-5xl capitalize font-thin">
+                        {user && user?.name !== '' && user?.name !== 'anonyme'
+                          ? user?.name?.substring(0, 1)
+                          : null}
+                      </span>
+                    </div>
+                  )}
                   <div>
                     <p className="font-serif text-lg font-medium text-gray-800 mb-1">
                       {user?.name}
@@ -73,7 +95,16 @@ const EditProfile: NextPage = () => {
                       username
                     </p> */}
                     <div className="cursor-pointer pb-1 px-2 border border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white">
-                      <span className=" text-xs">Change Photo</span>
+                      <label className=" text-xs">
+                        Change Photo
+                        <input
+                          {...register('avatarUrl')}
+                          id="picture"
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                        />
+                      </label>
                     </div>
                   </div>
                 </div>

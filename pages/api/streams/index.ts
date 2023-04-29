@@ -8,6 +8,9 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   if (req.method === 'GET') {
+    const { page } = req.query;
+    console.log(page);
+    const contentSize = 10;
     const streams = await client.stream.findMany({
       include: {
         messages: true,
@@ -18,10 +21,19 @@ async function handler(
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: contentSize,
+      skip: page ? contentSize * (+page - 1) : 0,
     });
+    const pageCount = Math.ceil(
+      (await client.stream.findMany({})).length / contentSize
+    );
     res.json({
       ok: true,
       streams,
+      pageCount,
     });
   }
 

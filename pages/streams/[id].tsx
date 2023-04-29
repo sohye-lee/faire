@@ -36,12 +36,16 @@ interface MessageForm {
 }
 
 const LiveDetail: NextPage = () => {
-  useRef();
+  const boxHeight = useRef<null | HTMLDivElement>(null);
+
   const { user } = useUser();
   const router = useRouter();
   const { id } = router.query;
   const { data, isLoading, mutate } = useSWR<StreamResponse>(
-    `/api/streams/${id}`
+    id ? `/api/streams/${id}` : null,
+    {
+      refreshInterval: 1000,
+    }
   );
 
   const { register, handleSubmit, reset } = useForm<MessageForm>();
@@ -75,6 +79,9 @@ const LiveDetail: NextPage = () => {
     sendMessage(data);
   };
 
+  useEffect(() => {
+    boxHeight.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messageData]);
   // useEffect(() => {
   //   if (messageData && messageData?.ok) {
   //     mutate();
@@ -120,6 +127,7 @@ const LiveDetail: NextPage = () => {
                       message={message?.message}
                     />
                   ))}
+                  <div ref={boxHeight} />
                 </div>
               </div>
               <div className="absolute bottom-0 left-0 w-full">
