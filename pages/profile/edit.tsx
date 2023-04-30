@@ -29,22 +29,37 @@ const EditProfile: NextPage = () => {
     watch,
     formState: { errors },
   } = useForm<EditProfileForm>();
+
   useEffect(() => {
     if (user?.name) setValue('name', user?.name);
     if (user?.email) setValue('email', user?.email);
     if (user?.phone) setValue('phone', user?.phone);
+    if (user?.avatarUrl) setAvatarPreview(user?.avatarUrl);
   }, [user, setValue]);
   const [editProfile, { data, loading }] =
     useMutation<EditProfileResponse>(`/api/users/me`);
-  const onValid = ({ email, phone, name, avatarUrl }: EditProfileForm) => {
+
+  const onValid = async ({ email, phone, name }: EditProfileForm) => {
     if (email === '' && phone === '') {
       setError('formErrors', { message: 'Email or Phone is required.' });
     }
     if (name === '') {
       setError('formErrors', { message: 'Name is required.' });
     }
-    editProfile({ name, email, phone, avatarUrl });
-    console.log(avatarUrl);
+    if (avatar && avatar.length > 0) {
+      const { uploadURL } = await (await fetch(`/api/files`)).json();
+      const imageUploadForm = new FormData();
+      imageUploadForm.append('file', avatar[0], user?.id + '');
+      const imageReq = await (
+        await fetch(uploadURL, {
+          method: 'POST',
+          body: imageUploadForm,
+        })
+      ).json();
+      editProfile({ name, email, phone, avatarId: imageReq.result.id });
+    } else {
+      editProfile({ name, email, phone });
+    }
   };
 
   useEffect(() => {
@@ -59,6 +74,7 @@ const EditProfile: NextPage = () => {
     if (avatar && avatar.length > 0) {
       const file = avatar[0];
       setAvatarPreview(URL.createObjectURL(file));
+      console.log(avatarPreview);
     }
   }, [avatar]);
 
@@ -73,10 +89,16 @@ const EditProfile: NextPage = () => {
             >
               <div className="w-full space-y-3">
                 <div className="flex space-x-3 items-center pb-3">
-                  {avatarPreview ? (
-                    <img
-                      src={avatarPreview}
+                  {avatarPreview || user?.avatarUrl ? (
+                    <div
                       className="h-24 w-24 rounded-full bg-slate-200"
+                      style={{
+                        backgroundImage: `url(${
+                          avatarPreview || user?.avatarUrl
+                        })`,
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                      }}
                     />
                   ) : (
                     <div className="h-24 w-24 rounded-full bg-purple-400 flex items-center justify-center">

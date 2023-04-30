@@ -5,6 +5,8 @@ import useSWR from 'swr';
 import useUser from '@libs/client/useUser';
 import { Review, User } from '@prisma/client';
 import Rating from '@components/rating';
+import Avatar from '@components/avatar';
+
 interface Rating {
   num: number;
 }
@@ -23,13 +25,17 @@ const Profile: NextPage = () => {
     <Layout title={'Profile'} hasTabBar={true} canGoBack={false}>
       <div className="flex flex-col space-y-4 px-4">
         <div className="flex px-4 items-center space-x-3 pt-3 pb-4 border-b cursor-pointer">
-          <div className="h-10 w-10 rounded-full bg-slate-200" />
+          <Avatar size={16} name={user?.name!} imageUrl={user?.avatarUrl!} />
+          {/* <div
+            className="h-16 w-16 rounded-full bg-slate-200 bg-center bg-cover"
+            style={{ backgroundImage: `url(${user?.avatarUrl})` }}
+          /> */}
           <div>
-            <p className="font-medium font-serif text-sm text-gray-700">
+            <p className="font-medium font-serif text-lg text-gray-700">
               {user?.name}
             </p>
             <Link href="/profile/edit">
-              <p className="text-xs font-medium font-sans text-gray-700">
+              <p className="text-xs font-medium font-sans text-gray-500 hover:text-purple-500">
                 Edit profile &rarr;
               </p>
             </Link>

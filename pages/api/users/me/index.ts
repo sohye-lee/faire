@@ -19,7 +19,7 @@ async function handler(
   if (req.method === 'POST') {
     const {
       session: { user },
-      body: { email, phone, name, avatarUrl },
+      body: { email, phone, name, avatarId },
     } = req;
 
     const currentUser = await client.user.findUnique({
@@ -55,6 +55,7 @@ async function handler(
       });
       res.json({ ok: true });
     }
+
     if (phone && phone !== currentUser?.phone) {
       const alreadyExists = Boolean(
         await client.user.findUnique({
@@ -90,6 +91,17 @@ async function handler(
         },
         data: {
           name,
+        },
+      });
+    }
+
+    if (avatarId) {
+      await client.user.update({
+        where: {
+          id: user?.id,
+        },
+        data: {
+          avatarUrl: `https://imagedelivery.net/elsegPDGIcDKwFnUAcL-SA/${avatarId}/avatar`,
         },
       });
     }

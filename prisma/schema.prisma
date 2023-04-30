@@ -52,7 +52,7 @@ model Product {
   userId      Int
   latitude    Float?
   longitude   Float?
-  records      Record[]        
+  records     Record[]        
 }
 
 model Post {
