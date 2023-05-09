@@ -45,16 +45,28 @@ model Product {
   name        String 
   price       Float
   description String    @db.MediumText
-  image       String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  condition   String?   
+  color       String?
+  imageIds    String?
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   latitude    Float?
   longitude   Float?
-  records     Record[]        
+  records     Record[]  
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+ 
 model Post {
   id          Int       @id @default(autoincrement())
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -141,3 +153,5 @@ model Message {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
+ 

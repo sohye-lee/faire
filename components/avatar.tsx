@@ -14,7 +14,7 @@ export default function Avatar({ size, name, imageUrl }: AvatarProps) {
         />
       ) : (
         <div
-          className={`w-${size} h-${size} bg-purple-300 text-white font-light font-serif font-3xl`}
+          className={`w-${size} h-${size} bg-purple-300 text-white font-light font-serif font-3xl rounded-full flex items-center justify-center`}
         >
           {name && name != '' ? name.toUpperCase().substring(0, 1) : '?'}
         </div>

@@ -1,14 +1,15 @@
-import { Decimal } from '@prisma/client/runtime';
 import type { NextPage } from 'next';
-import { FieldErrors, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Button from '@components/button';
 import Input from '@components/input';
 import Layout from '@components/layout';
 import useMutation from '@libs/client/useMutation';
 import { useEffect, useState } from 'react';
-import { Product } from '@prisma/client';
+import { Category, Product } from '@prisma/client';
 import { useRouter } from 'next/router';
 import useCoords from '@libs/client/useCoords';
+import useSWR from 'swr';
+import { colorList, getConditions } from '@libs/client/myFuncs';
 
 interface ProductUploadForm {
   name: string;
@@ -21,30 +22,87 @@ interface UploadProductMutation {
   ok: boolean;
   product: Product;
 }
+
+interface CategoriesResponse {
+  ok: boolean;
+  categories: Category[];
+}
+
 const Upload: NextPage = () => {
   const router = useRouter();
   const [uploadProduct, { loading, data }] =
     useMutation<UploadProductMutation>('/api/products');
-  const { register, handleSubmit, watch } = useForm<ProductUploadForm>();
+  const { register, handleSubmit, watch, reset } = useForm<ProductUploadForm>();
   const { latitude, longitude } = useCoords();
-  const onValid = (data: ProductUploadForm) => {
-    if (loading) return;
-    uploadProduct({ ...data, latitude, longitude });
-  };
+  const [categoryId, setCategoryId] = useState('');
+  const [color, setColor] = useState('');
+  const [condition, setCondition] = useState('');
+  const [imageIds, setImageIds] = useState('');
+
+  const photos: Blob[] | any = watch('image');
+  const [photoPreview, setPhotoPreview] = useState('');
+
+  const { data: categoriesData } =
+    useSWR<CategoriesResponse>('/api/categories');
+
   useEffect(() => {
-    if (data?.ok) {
-      router.replace(`/products/${data.product.id}`);
+    if (photos && photos.length > 0) {
+      const file = photos[0];
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  }, [photos]);
+
+  const confirmPhotos = () => {
+    const imageIdList: string[] = [];
+
+    if (photos) {
+      let convertedPhotos = Array.prototype.slice.call(photos);
+
+      // For loop for each photo
+      convertedPhotos.map(async (photo: Blob) => {
+        const { uploadURL } = await (await fetch('/api/files')).json();
+        const imageForm = new FormData();
+
+        // Upload images to Cloudflare -> get image id -> add to the photoids list
+        imageForm.append('file', photo);
+        await (
+          await fetch(uploadURL, {
+            method: 'POST',
+            body: imageForm,
+          })
+        )
+          .json()
+          .then((res) => imageIdList.push(res.result.id))
+          .then((res) => setImageIds(JSON.stringify(imageIdList)));
+        // imageIdList.push(imageReq.result.id);
+        console.log(imageIdList);
+      });
+    }
+  };
+  const resetPhotos = () => {
+    reset({ image: '' });
+  };
+  const onValid = async ({ name, price, description }: ProductUploadForm) => {
+    if (loading) return;
+    uploadProduct({
+      name,
+      price,
+      description,
+      latitude,
+      longitude,
+      imageIds,
+      color,
+      condition,
+      categoryId,
+    });
+  };
+
+  useEffect(() => {
+    if (data && data?.ok) {
+      router.replace(`/products/${data?.product.id}`);
     }
   }, [data, router]);
 
-  const photo = watch('image');
-  const [photoPreview, setPhotoPreview] = useState('');
-  useEffect(() => {
-    if (photo && photo.length > 0) {
-      const file = photo[0];
-      setPhotoPreview(URL.createObjectURL(file));
-    }
-  }, [photo]);
   return (
     <Layout title={'Upload Your Product'} canGoBack>
       <form
@@ -53,12 +111,32 @@ const Upload: NextPage = () => {
       >
         <div>
           {photoPreview ? (
-            <div
-              className="w-full bg-cover bg-center aspect-square"
-              style={{ backgroundImage: `url(${photoPreview})` }}
-            />
+            <>
+              <div
+                className="w-full bg-cover bg-center aspect-square relative"
+                style={{ backgroundImage: `url(${photoPreview})` }}
+              >
+                <div className="absolute right-0 bottom-0 flex items-stretch ">
+                  <button
+                    className="text-xs p-2 font-serif bg-white border border-gray-800 border-r-0"
+                    onClick={() => {
+                      resetPhotos();
+                      setPhotoPreview('');
+                    }}
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={confirmPhotos}
+                    className="text-xs font-serif p-2 bg-white border border-gray-800"
+                  >
+                    Upload Images
+                  </button>
+                </div>
+              </div>
+            </>
           ) : (
-            <label className="flex hover:text-purple-600 transition hover:border-purple-300 hover:bg-slate-100 justify-center items-center aspect-video w-full  border border-black border-dashed">
+            <label className="flex hover:text-purple-600 transition hover:border-purple-300 hover:bg-slate-100 justify-center items-center h-48 w-full  border border-black border-dashed">
               <svg
                 className="h-12 w-12"
                 stroke="currentColor"
@@ -80,6 +158,7 @@ const Upload: NextPage = () => {
                 name="image"
                 type="file"
                 accept="image/*"
+                multiple
               />
             </label>
           )}
@@ -110,7 +189,58 @@ const Upload: NextPage = () => {
           name="description"
           placeholder="details of the product"
         />
-
+        <select
+          onChange={(e) => setCategoryId(e.target.value)}
+          className="p-3 focus:ring-2 text-sm font-serif focus:ring-purple-500 border border-black"
+          defaultValue="default"
+        >
+          <option disabled value="default">
+            Category
+          </option>
+          {categoriesData?.categories ? (
+            categoriesData?.categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))
+          ) : (
+            <option>No categories yet.</option>
+          )}
+        </select>
+        <div className="flex items-stretch">
+          <select
+            onChange={(e) => setColor(e.target.value)}
+            className="w-full p-3 focus:ring-2 text-sm font-serif focus:ring-purple-500 border border-black"
+            defaultValue="default"
+          >
+            <option disabled value="default">
+              Color
+            </option>
+            {colorList.map((color, i) => (
+              <option key={i} value={color.hex}>
+                {color.color}
+              </option>
+            ))}
+          </select>
+          <div
+            className="aspect-square w-12 h-10 border border-gray-800 ml-2 rounded-full"
+            style={{ backgroundColor: color }}
+          ></div>
+        </div>
+        <select
+          className="p-3 focus:ring-2 text-sm font-serif focus:ring-purple-500 border border-black"
+          onChange={(e) => setCondition(e.target.value)}
+          defaultValue="default"
+        >
+          <option disabled value="default">
+            Condition
+          </option>
+          {getConditions().map((condition, i) => (
+            <option key={i} value={condition}>
+              {condition}
+            </option>
+          ))}
+        </select>
         <Button
           text={loading ? 'Loading ···' : 'Upload Product'}
           filled={true}

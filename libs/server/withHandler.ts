@@ -5,7 +5,7 @@ export interface ResponseType {
   [key: string]: any;
 }
 
-type Method = 'GET' | 'POST' | 'DELETE';
+type Method = 'GET' | 'POST' | 'DELETE' | 'PUT';
 
 interface ConfigType {
   methods: Method[];

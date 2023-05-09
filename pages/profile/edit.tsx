@@ -72,7 +72,7 @@ const EditProfile: NextPage = () => {
   const avatar = watch('avatarUrl');
   useEffect(() => {
     if (avatar && avatar.length > 0) {
-      const file = avatar[0];
+      const file: Blob | any = avatar[0];
       setAvatarPreview(URL.createObjectURL(file));
       console.log(avatarPreview);
     }

@@ -34,7 +34,6 @@ async function handler(
         },
       },
     });
-    console.log(req.query);
     res.json({
       ok: true,
       posts,

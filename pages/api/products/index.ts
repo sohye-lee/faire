@@ -28,6 +28,12 @@ async function handler(
             type: true,
           },
         },
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         _count: {
           select: {
             records: true,
@@ -43,24 +49,43 @@ async function handler(
 
   if (req.method === 'POST') {
     const {
-      body: { name, price, description, latitude, longitude },
-      session: { user },
-    } = req;
-    const product = await client.product.create({
-      data: {
+      body: {
         name,
-        price: +price,
+        price,
         description,
         latitude,
         longitude,
-        image: 'xx',
-        user: {
-          connect: {
-            id: user?.id,
+        categoryId,
+        color,
+        condition,
+        imageIds,
+      },
+      session: { user },
+    } = req;
+    const product = await client.product
+      .create({
+        data: {
+          name,
+          price: +price,
+          description,
+          latitude,
+          longitude,
+          imageIds,
+          color,
+          condition,
+          category: {
+            connect: {
+              id: +categoryId,
+            },
+          },
+          user: {
+            connect: {
+              id: user?.id,
+            },
           },
         },
-      },
-    });
+      })
+      .catch((e) => console.log(e));
     res.status(200).json({ ok: true, product });
   }
 }

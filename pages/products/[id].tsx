@@ -6,16 +6,21 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import Loading from '@components/loading';
 import Link from 'next/link';
-import { Product, User } from '@prisma/client';
+import { Category, Product, Record, User } from '@prisma/client';
 import useMutation from '@libs/client/useMutation';
+import Avatar from '@components/avatar';
+import Slider from '@components/slider';
+import { getColorNameByHex } from '@libs/client/myFuncs';
 
-interface ProductWithUser extends Product {
+interface ProductExtended extends Product {
   user: User;
+  records: Record;
+  category?: Category;
 }
 
 interface ItemDetailResponse {
   ok: boolean;
-  product: ProductWithUser;
+  product: ProductExtended;
   relatedProducts: Product[];
   isFavorited: boolean;
 }
@@ -25,6 +30,7 @@ const ItemDetail: NextPage = () => {
   const { data, mutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
+
   const [toggleFavorite] = useMutation(
     `/api/products/${router.query.id}/favorite`
   );
@@ -40,9 +46,27 @@ const ItemDetail: NextPage = () => {
         <Layout hasTabBar={false} canGoBack={true}>
           <div className="px-4">
             <div>
-              <div className="h-96 bg-slate-300" />
+              <div className="aspect-square w-full">
+                <Slider
+                  imageIds={
+                    data?.product?.imageIds ? data?.product?.imageIds : '[]'
+                  }
+                />
+              </div>
+              {/* <div
+                className="aspect-square bg-slate-300 bg-center bg-cover"
+                style={{
+                  backgroundImage: `url(${
+                    data?.product?.images ? data?.product?.images[0] : null
+                  })`,
+                }}
+              /> */}
               <div className="flex items-center space-x-3 py-3 border-t border-b cursor-pointer">
-                <div className="h-10 w-10 rounded-full bg-slate-200" />
+                <Avatar
+                  size={10}
+                  name={data?.product?.user?.name!}
+                  imageUrl={data?.product?.user?.avatarUrl!}
+                />
                 <div>
                   <p className="font-medium font-serif text-sm text-gray-700">
                     {data?.product?.user?.name}
@@ -59,6 +83,15 @@ const ItemDetail: NextPage = () => {
                   {data?.product?.name}
                 </h1>
                 <p className="text-3xl font-serif">${data?.product?.price}</p>
+                <p className="text-md text-gray-700 mt-1">
+                  {data?.product?.condition}
+                </p>
+                <p className="text-md text-gray-700">
+                  {data?.product?.category?.name}
+                </p>
+                <p className="text-md text-gray-700">
+                  {getColorNameByHex(data?.product?.color || '')}
+                </p>
                 <p className="my-3 text-sm text-gray-700">
                   {data?.product?.description}
                 </p>
