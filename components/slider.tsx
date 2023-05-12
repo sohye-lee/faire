@@ -57,7 +57,7 @@ export default function Slider({ imageIds }: SliderProps) {
           <div
             className="w-full h-full bg-center bg-cover"
             style={{
-              backgroundImage: `url(${getImageUrl(imagesIdsList[0].imageId)})`,
+              backgroundImage: `url(${getImageUrl(imagesIdsList[0])})`,
             }}
           ></div>
         )

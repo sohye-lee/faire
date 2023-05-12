@@ -40,6 +40,8 @@ const ItemDetail: NextPage = () => {
     mutate({ ...data, isFavorited: !data?.isFavorited }, false);
   };
 
+  console.log('imageId is ', data?.product?.imageIds);
+
   return (
     <>
       {data ? (
@@ -134,7 +136,9 @@ const ItemDetail: NextPage = () => {
                 {data?.relatedProducts?.map((product) => (
                   <Link href={`/products/${product.id}`} key={product.id}>
                     <a>
-                      <div className="bg-slate-300 w-80 h-80" />
+                      <div className="bg-slate-300 w-80 h-80">
+                        <Slider imageIds={product.imageIds || ''} />
+                      </div>
                       <h3 className="text-md font-serif text-gray-700">
                         {product.name}
                       </h3>

@@ -13,12 +13,13 @@ import Item from '@components/item';
 import Layout from '@components/layout';
 import useUser from '@libs/client/useUser';
 import useSWR from 'swr';
-import { Product, Record } from '@prisma/client';
+import { Category, Product, Record } from '@prisma/client';
 import Loading from '@components/loading';
 import useCoords from '@libs/client/useCoords';
 
-interface ProductWithCount extends Product {
+interface ProductWithExtended extends Product {
   records: Record[];
+  category: Category;
   _count: {
     favorites: number;
     records: number;
@@ -27,7 +28,7 @@ interface ProductWithCount extends Product {
 
 interface ProductsResponse {
   ok: boolean;
-  products: ProductWithCount[];
+  products: ProductWithExtended[];
 }
 
 const Home: NextPage = () => {
@@ -52,10 +53,14 @@ const Home: NextPage = () => {
               name={product.name}
               description={product.description}
               comments={3}
+              imageIds={product.imageIds || ''}
               favorites={
                 product.records.filter((r) => r.type == 'Favorite').length
               }
               price={product.price}
+              category={product.category}
+              condition={product.condition}
+              color={product.color || ''}
             />
           ))
         ) : (

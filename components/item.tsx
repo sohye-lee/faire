@@ -1,3 +1,5 @@
+import Slider from '@components/slider';
+import { Category } from '@prisma/client';
 import Link from 'next/link';
 import { RiHeart3Line, RiChat3Line } from 'react-icons/ri';
 
@@ -8,6 +10,10 @@ interface ItemProps {
   description: string;
   comments: number;
   favorites: number;
+  imageIds?: string;
+  category?: Category;
+  color?: string;
+  condition?: string;
 }
 
 export default function Item({
@@ -17,10 +23,19 @@ export default function Item({
   favorites = 0,
   id,
   description,
+  imageIds,
+  color,
+  condition,
+  category,
 }: ItemProps) {
+  console.log(color);
   return (
     <div className="border border-gray-200 h-full">
       <div className="w-full aspect-square bg-gray-100 relative">
+        <Slider imageIds={imageIds ? imageIds : ''} />
+        <div className="absolute top-2 left-2 text-sm border border-black px-2 bg-gray-700 text-white">
+          {category?.name}
+        </div>
         <div className="absolute top-2 right-2 flex items-center justify-end space-x-3">
           <button className="flex items-center space-x-1">
             <RiHeart3Line className="" width="24" height="24" />
@@ -41,19 +56,20 @@ export default function Item({
               </p>
             </a>
           </Link>
-          <p className="font-sans text-sm font-light text-gray-600 truncate mb-1">
-            {description}
-          </p>
           <p className="font-sans text-sm">${price}</p>
+          <div className="flex items-center space-x-1 mt-2">
+            {color && color !== '' && (
+              <div
+                className="w-5 h-5 rounded-full border border-gray-200 mr-2"
+                style={{ backgroundColor: color }}
+              ></div>
+            )}
+            <p className="text-xs font-light  ">{condition}</p>
+          </div>
         </div>
-        <div className="flex items-center space-x-1">
-          <div className="w-3 h-3 rounded-md bg-blue-400"></div>
-          <div className="w-3 h-3 rounded-md bg-purple-400"></div>
-          <div className="w-3 h-3 rounded-md bg-yellow-400"></div>
-          <div className="w-3 h-3 rounded-md bg-red-400"></div>
-          <div className="w-3 h-3 rounded-md bg-black"></div>
-          <div className="w-3 h-3 rounded-md bg-white border"></div>
-        </div>
+        <p className="font-sans text-sm font-light text-gray-600 truncate mb-1">
+          {description.length > 100 ? description.slice(0, 100) : description}
+        </p>
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ export default function Layout({
         <div className="w-full max-w-2xl h-full mx-auto px-4 flex justify-center space-x-4 items-center relative">
           {canGoBack ? (
             <div
-              className="absolute left-0 top-1/2 -translate-y-1/2 text-2xl text-gray-500 hover:text-purple-600 transition px-4"
+              className="absolute left-0 top-1/2 -translate-y-1/2 text-2xl text-gray-500 hover:text-purple-600 transition px-4 cursor-pointer"
               onClick={goBack}
             >
               <RiArrowLeftCircleLine />

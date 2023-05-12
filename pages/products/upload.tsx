@@ -193,6 +193,7 @@ const Upload: NextPage = () => {
           onChange={(e) => setCategoryId(e.target.value)}
           className="p-3 focus:ring-2 text-sm font-serif focus:ring-purple-500 border border-black"
           defaultValue="default"
+          required
         >
           <option disabled value="default">
             Category

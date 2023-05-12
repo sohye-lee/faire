@@ -45,7 +45,7 @@ model Product {
   name        String 
   price       Float
   description String    @db.MediumText
-  condition   String?   
+  condition   String   
   color       String?
   imageIds    String?
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
